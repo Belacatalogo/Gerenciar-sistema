@@ -506,11 +506,12 @@
     padding: 0;
     border: none;
     background: transparent;
+    z-index: 2;
   }
-  .uz-icon { font-size: 40px; margin-bottom: 12px; display: block; position: relative; z-index: 1; }
-  .uz-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 1; }
-  .uz-sub { font-size: 12px; color: var(--muted); position: relative; z-index: 1; }
-  .uz-file { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; display: none; }
+  .uz-icon { font-size: 40px; margin-bottom: 12px; display: block; position: relative; z-index: 1; pointer-events: none; }
+  .uz-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 1; pointer-events: none; }
+  .uz-sub { font-size: 12px; color: var(--muted); position: relative; z-index: 1; pointer-events: none; }
+  .uz-file { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; display: none; pointer-events: none; }
 
   /* INPUT MODE TOGGLE */
   .input-mode-toggle {
@@ -906,6 +907,75 @@
     box-shadow: 0 0 20px rgba(0,255,136,0.2);
   }
   .btn-confirm:hover { background: #00e87c; box-shadow: 0 0 30px rgba(0,255,136,0.35); transform: translateY(-1px); }
+
+  /* EDIT STATUS MODAL */
+  .edit-status-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .edit-status-modal {
+    background: var(--card);
+    border: 1px solid rgba(124,58,237,0.35);
+    border-radius: 18px;
+    padding: 0;
+    max-width: 400px; width: 100%;
+    box-shadow: 0 0 60px rgba(124,58,237,0.12), 0 24px 64px rgba(0,0,0,0.6);
+    animation: scaleIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    overflow: hidden;
+  }
+  .esm-header {
+    padding: 18px 20px 0;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .esm-header-icon {
+    width: 42px; height: 42px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(124,58,237,0.2), rgba(0,255,136,0.1));
+    border: 1px solid rgba(124,58,237,0.3);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .esm-header-text h2 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+  .esm-header-text p  { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .esm-body { padding: 0 20px 18px; }
+  .esm-version-info {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 13px;
+    margin-bottom: 14px;
+    font-size: 12.5px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+  .esm-version-info strong { color: var(--text); display: block; margin-bottom: 2px; font-size: 13px; }
+  .esm-label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    display: block;
+  }
+  .esm-role-picker { display: flex; gap: 6px; }
+  .esm-actions {
+    padding: 14px 20px 18px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 9px;
+  }
+  .esm-actions .btn { flex: 1; padding: 11px; font-size: 11px; }
+  .btn-save-status {
+    background: var(--accent2); color: #fff;
+    box-shadow: 0 0 16px rgba(124,58,237,0.2);
+  }
+  .btn-save-status:hover { background: #6d28d9; box-shadow: 0 0 24px rgba(124,58,237,0.35); transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -1183,6 +1253,35 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- ======== EDIT STATUS MODAL ======== -->
+<div class="edit-status-overlay" id="editStatusOverlay" style="display:none">
+  <div class="edit-status-modal">
+    <div class="esm-header">
+      <div class="esm-header-icon">✏️</div>
+      <div class="esm-header-text">
+        <h2>Editar Status</h2>
+        <p>Altere o status desta versão no histórico</p>
+      </div>
+    </div>
+    <div class="esm-body">
+      <div class="esm-version-info">
+        <strong id="esmVersionName">—</strong>
+        <span id="esmVersionMeta">—</span>
+      </div>
+      <span class="esm-label">Novo status</span>
+      <div class="esm-role-picker" id="esmRolePicker">
+        <button class="role-btn" id="esmBtnActive"  onclick="selectEsmRole('active')">🟢 Ativo</button>
+        <button class="role-btn" id="esmBtnStaging" onclick="selectEsmRole('staging')">🟡 Staging</button>
+        <button class="role-btn dev-role" id="esmBtnDev" onclick="selectEsmRole('dev')">🟣 Dev</button>
+      </div>
+    </div>
+    <div class="esm-actions">
+      <button class="btn btn-secondary" onclick="closeEditStatus()">✕ Cancelar</button>
+      <button class="btn btn-save-status" onclick="confirmEditStatus()">✓ Salvar status</button>
+    </div>
+  </div>
+</div>
 
 <!-- ======== DEPLOY CONFIRM MODAL ======== -->
 <div class="confirm-overlay" id="confirmOverlay" style="display:none">
@@ -1696,6 +1795,7 @@ function renderOvFiles(rIdx, r, files) {
             ${uploadedNote ? `<div style="margin-bottom:8px">${uploadedNote}</div>` : ''}
             <div class="v-actions">
               <button class="btn btn-secondary btn-xs" onclick="viewVerOv('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})">👁 Ver</button>
+              <button class="btn btn-secondary btn-xs" onclick="openEditStatus('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})" style="border-color:rgba(124,58,237,0.4);color:#a78bfa">✏️ Status</button>
               <button class="btn btn-danger btn-xs" onclick="rollbackOv('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})">↩ Restaurar</button>
             </div>
           </div>`;
@@ -1751,6 +1851,73 @@ function toggleVersAcc(id) {
   if (!body) return;
   const open = body.classList.toggle('open');
   if (arrow) arrow.textContent = open ? '⌄' : '›';
+}
+
+// ============================================================
+// EDIT VERSION STATUS
+// ============================================================
+let _editStatusCtx = null; // { owner, repo, filename, idx }
+let _esmRole = 'dev';
+
+function openEditStatus(owner, repo, filename, idx) {
+  const key = `${owner}/${repo}/${filename}`;
+  const v   = S.versions[key]?.[idx];
+  if (!v) return toast('Versão não encontrada', 'error');
+
+  _editStatusCtx = { owner, repo, filename, idx, key };
+  _esmRole = v.roleAtTime || 'dev';
+
+  const d  = new Date(v.time);
+  const ts = d.toLocaleDateString('pt-BR') + ' às ' + d.toLocaleTimeString('pt-BR', { hour:'2-digit', minute:'2-digit' });
+
+  document.getElementById('esmVersionName').textContent = v.name || v.desc || '—';
+  document.getElementById('esmVersionMeta').textContent = ts + ' · ' + filename;
+
+  selectEsmRole(_esmRole);
+  document.getElementById('editStatusOverlay').style.display = 'flex';
+}
+
+function selectEsmRole(role) {
+  _esmRole = role;
+  const map = { active: 'active-role', staging: 'staging-role', dev: 'dev-role' };
+  ['active','staging','dev'].forEach(r => {
+    const btn = document.getElementById('esmBtn' + r.charAt(0).toUpperCase() + r.slice(1));
+    if (btn) btn.className = `role-btn ${_esmRole === r ? map[r] : ''}`;
+  });
+}
+
+function closeEditStatus() {
+  document.getElementById('editStatusOverlay').style.display = 'none';
+  _editStatusCtx = null;
+}
+
+function confirmEditStatus() {
+  if (!_editStatusCtx) return;
+  const { key, idx, owner, repo } = _editStatusCtx;
+  const v = S.versions[key]?.[idx];
+  if (!v) return toast('Versão não encontrada', 'error');
+
+  v.roleAtTime = _esmRole;
+
+  // Also update the file's current role if this is the most recent version (idx === 0)
+  if (idx === 0) {
+    S.roles[key] = _esmRole;
+    toast('Status atualizado! (versão mais recente → status do arquivo também atualizado)', 'success', 3500);
+  } else {
+    toast('Status da versão atualizado!', 'success', 2500);
+  }
+
+  persist();
+  closeEditStatus();
+
+  // Refresh overview card if open
+  if (owner && repo) {
+    const rIdx = S.repos.findIndex(r => r.owner === owner && r.repo === repo);
+    if (rIdx >= 0 && document.getElementById(`ovb-${rIdx}`)?.classList.contains('visible')) {
+      loadOvFiles(rIdx);
+    }
+    renderRepos();
+  }
 }
 
 // ============================================================
@@ -2569,6 +2736,8 @@ function copyText(text) {
 document.addEventListener('click', e => {
   const overlay = document.getElementById('confirmOverlay');
   if (e.target === overlay) closeConfirm();
+  const editOverlay = document.getElementById('editStatusOverlay');
+  if (e.target === editOverlay) closeEditStatus();
 });
 
 // ============================================================

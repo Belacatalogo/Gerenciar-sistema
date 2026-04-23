@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Deploy Manager">
+<meta name="theme-color" content="#09090f">
 <title>HTML Deploy Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -765,6 +769,143 @@
     .tab { font-size: 9px; padding: 9px 5px; letter-spacing: 0; }
     header { flex-direction: column; gap: 10px; align-items: flex-start; }
   }
+
+  /* ===================== iOS ADD TO HOME SCREEN BANNER ===================== */
+  .ios-banner {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: var(--card);
+    border-top: 1px solid rgba(0,255,136,0.2);
+    padding: 14px 16px 28px; /* extra bottom for iPhone home bar */
+    z-index: 10000;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: slideUpBanner 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    box-shadow: 0 -8px 32px rgba(0,0,0,0.5);
+  }
+  @keyframes slideUpBanner {
+    from { transform: translateY(100%); opacity: 0; }
+    to   { transform: translateY(0);   opacity: 1; }
+  }
+  .ios-banner-icon {
+    width: 46px; height: 46px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    box-shadow: 0 0 16px rgba(0,255,136,0.2);
+  }
+  .ios-banner-text { flex: 1; min-width: 0; }
+  .ios-banner-title {
+    font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px;
+  }
+  .ios-banner-sub {
+    font-size: 11px; color: var(--muted); line-height: 1.5; font-family: 'Space Mono', monospace;
+  }
+  .ios-banner-sub strong { color: var(--accent); }
+  .ios-banner-arrow {
+    position: absolute;
+    bottom: 62px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    animation: bounce 1.2s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .ios-banner-arrow span { font-size: 22px; }
+  .ios-banner-arrow-label {
+    font-family: 'Space Mono', monospace; font-size: 9px; color: var(--accent);
+    text-transform: uppercase; letter-spacing: 1px; font-weight: 700;
+  }
+  @keyframes bounce { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(5px)} }
+  .ios-banner-close {
+    background: transparent; border: 1px solid var(--border);
+    border-radius: 6px; color: var(--muted); cursor: pointer;
+    font-size: 14px; padding: 2px 8px; flex-shrink: 0;
+    font-family: 'Space Mono', monospace; transition: all 0.15s;
+  }
+  .ios-banner-close:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* ===================== DEPLOY CONFIRM MODAL ===================== */
+  .confirm-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75);
+    backdrop-filter: blur(4px);
+    z-index: 9998;
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    animation: fadeIn 0.2s ease;
+  }
+  .confirm-modal {
+    background: var(--card);
+    border: 1px solid rgba(0,255,136,0.25);
+    border-radius: 18px;
+    padding: 0;
+    max-width: 460px; width: 100%;
+    box-shadow: 0 0 60px rgba(0,255,136,0.08), 0 24px 64px rgba(0,0,0,0.6);
+    animation: scaleIn 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    overflow: hidden;
+  }
+  @keyframes scaleIn {
+    from { transform: scale(0.9); opacity: 0; }
+    to   { transform: scale(1);   opacity: 1; }
+  }
+  .confirm-header {
+    padding: 20px 22px 0;
+    display: flex; align-items: center; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .confirm-header-icon {
+    width: 44px; height: 44px; flex-shrink: 0;
+    background: linear-gradient(135deg, rgba(245,158,11,0.2), rgba(239,68,68,0.15));
+    border: 1px solid rgba(245,158,11,0.3);
+    border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+  }
+  .confirm-header-text h2 { font-size: 16px; font-weight: 800; margin-bottom: 3px; }
+  .confirm-header-text p  { font-size: 11.5px; color: var(--muted); font-family: 'Space Mono', monospace; }
+
+  .confirm-body { padding: 0 22px 20px; display: flex; flex-direction: column; gap: 10px; }
+
+  .confirm-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 11px 14px;
+    display: flex; align-items: flex-start; gap: 11px;
+  }
+  .confirm-row-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .confirm-row-content { flex: 1; min-width: 0; }
+  .confirm-row-label {
+    font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase;
+    letter-spacing: 1px; color: var(--muted); margin-bottom: 3px; font-weight: 700;
+  }
+  .confirm-row-value { font-size: 13px; font-weight: 700; color: var(--text); word-break: break-all; }
+  .confirm-row-sub { font-family: 'Space Mono', monospace; font-size: 10.5px; color: var(--muted); margin-top: 2px; }
+  .confirm-row.highlight { border-color: rgba(0,255,136,0.25); background: rgba(0,255,136,0.04); }
+  .confirm-row.highlight .confirm-row-value { color: var(--accent); }
+  .confirm-row.warn { border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.04); }
+  .confirm-row.warn .confirm-row-value { color: var(--accent3); }
+
+  .confirm-warning {
+    background: rgba(239,68,68,0.06);
+    border: 1px solid rgba(239,68,68,0.2);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px; color: var(--danger); line-height: 1.5;
+    display: flex; gap: 8px; align-items: flex-start;
+  }
+
+  .confirm-actions {
+    padding: 16px 22px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; gap: 9px;
+  }
+  .confirm-actions .btn { flex: 1; padding: 12px; font-size: 12px; }
+  .btn-confirm {
+    background: var(--accent); color: #000;
+    box-shadow: 0 0 20px rgba(0,255,136,0.2);
+  }
+  .btn-confirm:hover { background: #00e87c; box-shadow: 0 0 30px rgba(0,255,136,0.35); transform: translateY(-1px); }
 </style>
 </head>
 <body>
@@ -1043,6 +1184,59 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ======== DEPLOY CONFIRM MODAL ======== -->
+<div class="confirm-overlay" id="confirmOverlay" style="display:none">
+  <div class="confirm-modal">
+    <div class="confirm-header">
+      <div class="confirm-header-icon">🚀</div>
+      <div class="confirm-header-text">
+        <h2>Confirmar Deploy</h2>
+        <p>Revise antes de enviar ao GitHub</p>
+      </div>
+    </div>
+    <div class="confirm-body">
+      <div class="confirm-row highlight">
+        <div class="confirm-row-icon">📦</div>
+        <div class="confirm-row-content">
+          <div class="confirm-row-label">Repositório destino</div>
+          <div class="confirm-row-value" id="cfRepo">—</div>
+          <div class="confirm-row-sub" id="cfRepoUrl">—</div>
+        </div>
+      </div>
+      <div class="confirm-row">
+        <div class="confirm-row-icon">📄</div>
+        <div class="confirm-row-content">
+          <div class="confirm-row-label">Arquivo sendo enviado</div>
+          <div class="confirm-row-value" id="cfFileName">—</div>
+          <div class="confirm-row-sub" id="cfFileMeta">—</div>
+        </div>
+      </div>
+      <div class="confirm-row">
+        <div class="confirm-row-icon">🏷️</div>
+        <div class="confirm-row-content">
+          <div class="confirm-row-label">Nome da versão</div>
+          <div class="confirm-row-value" id="cfVersion">—</div>
+        </div>
+      </div>
+      <div class="confirm-row warn" id="cfRoleRow">
+        <div class="confirm-row-icon" id="cfRoleIcon">🟣</div>
+        <div class="confirm-row-content">
+          <div class="confirm-row-label">Status no site</div>
+          <div class="confirm-row-value" id="cfRole">Dev</div>
+        </div>
+      </div>
+      <div class="confirm-warning">
+        <span style="flex-shrink:0">⚠️</span>
+        <span>Esta ação <strong>sobrescreve o index.html atual</strong> do repositório. A versão anterior será salva no histórico local.</span>
+      </div>
+    </div>
+    <div class="confirm-actions">
+      <button class="btn btn-secondary" onclick="closeConfirm()">✕ Cancelar</button>
+      <button class="btn btn-confirm" onclick="confirmDeploy()">🚀 Confirmar envio</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ============================================================
 // ENCRYPTION — AES-256-GCM + PBKDF2
@@ -1131,6 +1325,9 @@ async function init() {
 
   document.getElementById('unlockPass')?.addEventListener('keydown', e => { if (e.key === 'Enter') unlock(); });
   document.getElementById('masterPass2')?.addEventListener('keydown', e => { if (e.key === 'Enter') setupMasterPassword(); });
+
+  // iOS banner (delayed so it doesn't compete with first render)
+  setTimeout(showIOSBanner, 1500);
 }
 
 function showScreen(name) {
@@ -2088,13 +2285,50 @@ async function deployFile() {
   const idx         = parseInt(document.getElementById('deployRepoSel').value);
   const versionName = document.getElementById('deployVersionName').value.trim();
   const desc        = document.getElementById('deployDesc').value.trim();
-  const filename    = 'index.html'; // Always deploy as index.html for GitHub Pages
 
   if (isNaN(idx) || idx < 0) return toast('Selecione um repositório', 'error');
   if (!S.uploadedFile)        return toast(S._pasteActive ? 'Cole um HTML válido antes de continuar' : 'Carregue o novo HTML primeiro', 'error');
   if (!versionName)           return toast('Adicione um nome para esta atualização', 'error');
   if (!desc)                  return toast('Descreva o que foi alterado nesta versão', 'error');
   if (!S.token)               return toast('Configure o token em ⚙️ Config', 'error');
+
+  // Show confirmation modal
+  const r = S.repos[idx];
+  const pageUrl = r.baseUrl
+    ? r.baseUrl.replace(/\/$/, '')
+    : `https://${r.owner.toLowerCase()}.github.io/${r.repo}`;
+
+  document.getElementById('cfRepo').textContent     = r.alias ? `${r.alias}  (${r.owner}/${r.repo})` : `${r.owner}/${r.repo}`;
+  document.getElementById('cfRepoUrl').textContent  = pageUrl;
+  document.getElementById('cfFileName').textContent = S._uploadedFromFile ? S.uploadedFile.name : '(código colado)';
+  document.getElementById('cfFileMeta').textContent = `→ index.html · ${(S.uploadedFile.size/1024).toFixed(1)} KB`;
+  document.getElementById('cfVersion').textContent  = versionName;
+
+  const roleMap = {
+    active:  { icon: '🟢', label: 'Ativo',   cls: 'highlight' },
+    staging: { icon: '🟡', label: 'Staging', cls: 'warn' },
+    dev:     { icon: '🟣', label: 'Dev',      cls: '' }
+  };
+  const rm = roleMap[S.deployRole] || roleMap.dev;
+  document.getElementById('cfRoleIcon').textContent = rm.icon;
+  document.getElementById('cfRole').textContent     = rm.label;
+  const cfRoleRow = document.getElementById('cfRoleRow');
+  cfRoleRow.className = 'confirm-row ' + rm.cls;
+
+  document.getElementById('confirmOverlay').style.display = 'flex';
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').style.display = 'none';
+}
+
+async function confirmDeploy() {
+  closeConfirm();
+
+  const idx         = parseInt(document.getElementById('deployRepoSel').value);
+  const versionName = document.getElementById('deployVersionName').value.trim();
+  const desc        = document.getElementById('deployDesc').value.trim();
+  const filename    = 'index.html';
 
   const r   = S.repos[idx];
   const btn = document.getElementById('btnDeploy');
@@ -2327,6 +2561,55 @@ function copyText(text) {
     ()  => toast('Copiado!', 'success', 1500),
     ()  => toast('Erro ao copiar', 'error')
   );
+}
+
+// ============================================================
+// DEPLOY CONFIRM — close on overlay click
+// ============================================================
+document.addEventListener('click', e => {
+  const overlay = document.getElementById('confirmOverlay');
+  if (e.target === overlay) closeConfirm();
+});
+
+// ============================================================
+// iOS ADD TO HOME SCREEN BANNER
+// ============================================================
+function showIOSBanner() {
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+  const isStandalone = window.navigator.standalone === true;
+  const dismissed = localStorage.getItem('hdm_ios_banner_dismissed');
+
+  if (!isIOS || !isSafari || isStandalone || dismissed) return;
+
+  const banner = document.createElement('div');
+  banner.className = 'ios-banner';
+  banner.id = 'iosBanner';
+  banner.innerHTML = `
+    <div class="ios-banner-icon">⚡</div>
+    <div class="ios-banner-text">
+      <div class="ios-banner-title">Adicionar à Tela Inicial</div>
+      <div class="ios-banner-sub">Toque em <strong>Compartilhar</strong> 
+        <svg style="display:inline;vertical-align:middle;margin:0 2px" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+        e depois <strong>Adicionar à Tela de Início</strong></div>
+    </div>
+    <button class="ios-banner-close" onclick="dismissIOSBanner()">✕</button>
+  `;
+  document.body.appendChild(banner);
+
+  // Auto-dismiss after 12s
+  setTimeout(dismissIOSBanner, 12000);
+}
+
+function dismissIOSBanner() {
+  const banner = document.getElementById('iosBanner');
+  if (banner) {
+    banner.style.transition = 'transform 0.35s ease, opacity 0.35s ease';
+    banner.style.transform = 'translateY(100%)';
+    banner.style.opacity = '0';
+    setTimeout(() => banner.remove(), 360);
+  }
+  localStorage.setItem('hdm_ios_banner_dismissed', '1');
 }
 
 init();

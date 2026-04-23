@@ -1795,6 +1795,7 @@ function renderOvFiles(rIdx, r, files) {
             ${uploadedNote ? `<div style="margin-bottom:8px">${uploadedNote}</div>` : ''}
             <div class="v-actions">
               <button class="btn btn-secondary btn-xs" onclick="viewVerOv('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})">👁 Ver</button>
+              <button class="btn btn-secondary btn-xs" onclick="downloadVerOv('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})" style="border-color:rgba(0,255,136,0.3);color:var(--accent)">⬇ Baixar</button>
               <button class="btn btn-secondary btn-xs" onclick="openEditStatus('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})" style="border-color:rgba(124,58,237,0.4);color:#a78bfa">✏️ Status</button>
               <button class="btn btn-danger btn-xs" onclick="rollbackOv('${sanitize(r.owner)}','${sanitize(r.repo)}','${sanitize(file.name)}',${vi})">↩ Restaurar</button>
             </div>
@@ -1931,6 +1932,26 @@ function viewVerOv(owner, repo, filename, idx) {
   const url  = URL.createObjectURL(blob);
   window.open(url, '_blank');
   setTimeout(() => URL.revokeObjectURL(url), 10000);
+}
+
+function downloadVerOv(owner, repo, filename, idx) {
+  const key = `${owner}/${repo}/${filename}`;
+  const v = S.versions[key]?.[idx];
+  if (!v) return toast('Versão não encontrada', 'error');
+  const versions = S.versions[key];
+  const vNum = versions.length - idx;
+  const safeName = (v.name || v.desc || `v${vNum}`).replace(/[^a-zA-Z0-9\-_. ]/g, '').trim().replace(/\s+/g, '_') || `v${vNum}`;
+  const downloadName = `${filename.replace(/\.html?$/i, '')}_v${vNum}_${safeName}.html`;
+  const blob = new Blob([v.backup], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = downloadName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 5000);
+  toast(`⬇ Baixando ${downloadName}`, 'success', 2500);
 }
 
 async function rollbackOv(owner, repo, filename, idx) {

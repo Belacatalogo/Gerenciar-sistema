@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
@@ -7,11 +6,6 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://api.github.com; img-src 'self' data:;">
 <meta name="referrer" content="no-referrer">
 <meta name="robots" content="noindex, nofollow">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Deploy Manager">
-<meta name="theme-color" content="#09090f">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%2309090f'/%3E%3Crect width='100' height='100' rx='22' fill='url(%23g)'/%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2300ff88' stop-opacity='.15'/%3E%3Cstop offset='1' stop-color='%237c3aed' stop-opacity='.15'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ctext x='50' y='67' text-anchor='middle' font-size='52' font-family='system-ui'%3E⚡%3C/text%3E%3C/svg%3E">
 <title>HTML Deploy Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
@@ -32,649 +26,747 @@
     --dev: #7c3aed;
   }
 
-- { margin: 0; padding: 0; box-sizing: border-box; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-font-family: ‘Syne’, sans-serif;
-background: var(–bg);
-color: var(–text);
-min-height: 100vh;
-overflow-x: hidden;
-}
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-body::before {
-content: ‘’;
-position: fixed;
-inset: 0;
-background:
-radial-gradient(ellipse 70% 50% at 85% 10%, rgba(0,255,136,0.035) 0%, transparent 60%),
-radial-gradient(ellipse 50% 70% at 5% 90%, rgba(124,58,237,0.05) 0%, transparent 60%),
-radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,0,20,0.4) 0%, transparent 80%);
-pointer-events: none;
-z-index: 0;
-}
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 50% at 85% 10%, rgba(0,255,136,0.035) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 70% at 5% 90%, rgba(124,58,237,0.05) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,0,20,0.4) 0%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
+  }
 
-.grid-bg {
-position: fixed;
-inset: 0;
-background-image:
-linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
-linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
-background-size: 44px 44px;
-pointer-events: none;
-z-index: 0;
-}
+  .grid-bg {
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.018) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.018) 1px, transparent 1px);
+    background-size: 44px 44px;
+    pointer-events: none;
+    z-index: 0;
+  }
 
-.container {
-max-width: 980px;
-margin: 0 auto;
-padding: 20px 16px 100px;
-position: relative;
-z-index: 1;
-}
+  .container {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 20px 16px 100px;
+    position: relative;
+    z-index: 1;
+  }
 
-/* HEADER */
-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-margin-bottom: 22px;
-padding-bottom: 16px;
-border-bottom: 1px solid var(–border);
-}
+  /* HEADER */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
 
-.logo { display: flex; align-items: center; gap: 12px; }
-.logo-icon {
-width: 38px; height: 38px;
-background: linear-gradient(135deg, var(–accent) 0%, var(–accent2) 100%);
-border-radius: 10px;
-display: flex; align-items: center; justify-content: center;
-font-size: 19px;
-box-shadow: 0 0 20px rgba(0,255,136,0.15);
-}
-.logo-text h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
-.logo-text h1 span { color: var(–accent); }
-.logo-text p { font-size: 10px; color: var(–muted); font-family: ‘Space Mono’, monospace; margin-top: 1px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon {
+    width: 38px; height: 38px;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 100%);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 19px;
+    box-shadow: 0 0 20px rgba(0,255,136,0.15);
+  }
+  .logo-text h1 { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+  .logo-text h1 span { color: var(--accent); }
+  .logo-text p { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: 1px; }
 
-.auth-status {
-display: flex; align-items: center; gap: 8px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 20px;
-padding: 6px 14px;
-font-size: 11px;
-font-family: ‘Space Mono’, monospace;
-cursor: pointer;
-transition: border-color 0.2s;
-}
-.auth-status:hover { border-color: var(–accent); }
-.status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(–muted); flex-shrink: 0; }
-.status-dot.online { background: var(–accent); box-shadow: 0 0 8px var(–accent); animation: pulse 2s infinite; }
+  .auth-status {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .auth-status:hover { border-color: var(--accent); }
+  .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .status-dot.online { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
 
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
 
-/* TABS */
-.tabs {
-display: flex;
-gap: 3px;
-margin-bottom: 26px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 4px;
-}
+  /* TABS */
+  .tabs {
+    display: flex;
+    gap: 3px;
+    margin-bottom: 26px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 4px;
+  }
 
-.tab {
-flex: 1;
-padding: 10px 8px;
-background: transparent;
-border: none;
-border-radius: 10px;
-color: var(–muted);
-font-family: ‘Space Mono’, monospace;
-font-size: 10px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-cursor: pointer;
-transition: all 0.2s;
-white-space: nowrap;
-}
+  .tab {
+    flex: 1;
+    padding: 10px 8px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
 
-.tab.active {
-background: var(–surface);
-color: var(–accent);
-box-shadow: 0 0 0 1px rgba(0,255,136,0.15), inset 0 1px 0 rgba(0,255,136,0.05);
-}
+  .tab.active {
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,255,136,0.15), inset 0 1px 0 rgba(0,255,136,0.05);
+  }
 
-.tab-content { display: none; }
-.tab-content.active { display: block; animation: fadeIn 0.25s ease; }
+  .tab-content { display: none; }
+  .tab-content.active { display: block; animation: fadeIn 0.25s ease; }
 
-@keyframes fadeIn {
-from { opacity: 0; transform: translateY(6px); }
-to   { opacity: 1; transform: translateY(0); }
-}
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-/* SECURITY BANNER */
-.security-banner {
-background: linear-gradient(135deg, rgba(0,255,136,0.06), rgba(124,58,237,0.06));
-border: 1px solid rgba(0,255,136,0.15);
-border-radius: 12px;
-padding: 13px 16px;
-margin-bottom: 22px;
-display: flex;
-gap: 12px;
-align-items: flex-start;
-}
-.security-banner .sb-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
-.security-banner .sb-text { font-size: 11.5px; line-height: 1.5; color: var(–muted); }
-.security-banner strong { color: var(–accent); font-family: ‘Space Mono’, monospace; font-size: 11px; }
+  /* SECURITY BANNER */
+  .security-banner {
+    background: linear-gradient(135deg, rgba(0,255,136,0.06), rgba(124,58,237,0.06));
+    border: 1px solid rgba(0,255,136,0.15);
+    border-radius: 12px;
+    padding: 13px 16px;
+    margin-bottom: 22px;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .security-banner .sb-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .security-banner .sb-text { font-size: 11.5px; line-height: 1.5; color: var(--muted); }
+  .security-banner strong { color: var(--accent); font-family: 'Space Mono', monospace; font-size: 11px; }
 
-/* FORMS */
-.form-card {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 18px 20px;
-margin-bottom: 22px;
-}
+  /* FORMS */
+  .form-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin-bottom: 22px;
+  }
 
-.field { margin-bottom: 13px; }
-.field:last-child { margin-bottom: 0; }
+  .field { margin-bottom: 13px; }
+  .field:last-child { margin-bottom: 0; }
 
-label {
-display: block;
-font-size: 9.5px;
-text-transform: uppercase;
-letter-spacing: 1.2px;
-color: var(–muted);
-margin-bottom: 6px;
-font-family: ‘Space Mono’, monospace;
-font-weight: 700;
-}
+  label {
+    display: block;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
 
-input, select, textarea {
-width: 100%;
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 9px;
-padding: 10px 13px;
-color: var(–text);
-font-family: ‘Space Mono’, monospace;
-font-size: 12.5px;
-outline: none;
-transition: border-color 0.2s, box-shadow 0.2s;
-}
-input:focus, select:focus, textarea:focus {
-border-color: rgba(0,255,136,0.4);
-box-shadow: 0 0 0 3px rgba(0,255,136,0.06);
-}
-input[type=“password”] { letter-spacing: 2px; }
-textarea { resize: vertical; min-height: 75px; font-family: ‘Syne’, sans-serif; font-size: 13.5px; line-height: 1.55; }
-select option { background: var(–surface); }
+  input, select, textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 9px;
+    padding: 10px 13px;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: 12.5px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: rgba(0,255,136,0.4);
+    box-shadow: 0 0 0 3px rgba(0,255,136,0.06);
+  }
+  input[type="password"] { letter-spacing: 2px; }
+  textarea { resize: vertical; min-height: 75px; font-family: 'Syne', sans-serif; font-size: 13.5px; line-height: 1.55; }
+  select option { background: var(--surface); }
 
-/* BUTTONS */
-.btn {
-padding: 10px 18px;
-border-radius: 9px;
-border: none;
-cursor: pointer;
-font-family: ‘Space Mono’, monospace;
-font-size: 11px;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-transition: all 0.2s;
-white-space: nowrap;
-}
-.btn-primary {
-background: var(–accent);
-color: #000;
-box-shadow: 0 0 14px rgba(0,255,136,0.15);
-}
-.btn-primary:hover:not(:disabled) {
-background: #00e87c;
-box-shadow: 0 0 22px rgba(0,255,136,0.28);
-transform: translateY(-1px);
-}
-.btn-secondary { background: transparent; color: var(–text); border: 1px solid var(–border); }
-.btn-secondary:hover:not(:disabled) { border-color: var(–accent); color: var(–accent); }
-.btn-danger { background: transparent; color: var(–danger); border: 1px solid rgba(239,68,68,0.4); }
-.btn-danger:hover:not(:disabled) { background: var(–danger); color: #fff; border-color: var(–danger); }
-.btn-small { padding: 5px 11px; font-size: 9.5px; border-radius: 7px; }
-.btn-xs { padding: 3px 8px; font-size: 9px; border-radius: 6px; }
-.btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
+  /* BUTTONS */
+  .btn {
+    padding: 10px 18px;
+    border-radius: 9px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 0 14px rgba(0,255,136,0.15);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: #00e87c;
+    box-shadow: 0 0 22px rgba(0,255,136,0.28);
+    transform: translateY(-1px);
+  }
+  .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+  .btn-secondary:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+  .btn-danger { background: transparent; color: var(--danger); border: 1px solid rgba(239,68,68,0.4); }
+  .btn-danger:hover:not(:disabled) { background: var(--danger); color: #fff; border-color: var(--danger); }
+  .btn-small { padding: 5px 11px; font-size: 9.5px; border-radius: 7px; }
+  .btn-xs { padding: 3px 8px; font-size: 9px; border-radius: 6px; }
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none !important; }
 
-/* SECTION TITLE */
-.section-title {
-font-size: 10px;
-text-transform: uppercase;
-letter-spacing: 2px;
-color: var(–muted);
-font-family: ‘Space Mono’, monospace;
-font-weight: 700;
-margin-bottom: 13px;
-display: flex;
-align-items: center;
-gap: 8px;
-}
-.section-title::after { content: ‘’; flex: 1; height: 1px; background: var(–border); }
+  /* SECTION TITLE */
+  .section-title {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    margin-bottom: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-/* BADGES */
-.badge {
-font-family: ‘Space Mono’, monospace;
-font-size: 9px;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-padding: 2px 8px;
-border-radius: 20px;
-font-weight: 700;
-flex-shrink: 0;
-}
-.badge-active  { background: rgba(0,255,136,0.12);  color: var(–active);  border: 1px solid rgba(0,255,136,0.25); }
-.badge-staging { background: rgba(245,158,11,0.12); color: var(–staging); border: 1px solid rgba(245,158,11,0.25); }
-.badge-dev     { background: rgba(124,58,237,0.12); color: var(–dev);     border: 1px solid rgba(124,58,237,0.25); }
-.badge-rollback{ background: rgba(239,68,68,0.12);  color: var(–danger);  border: 1px solid rgba(239,68,68,0.25); }
+  /* BADGES */
+  .badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .badge-active  { background: rgba(0,255,136,0.12);  color: var(--active);  border: 1px solid rgba(0,255,136,0.25); }
+  .badge-staging { background: rgba(245,158,11,0.12); color: var(--staging); border: 1px solid rgba(245,158,11,0.25); }
+  .badge-dev     { background: rgba(124,58,237,0.12); color: var(--dev);     border: 1px solid rgba(124,58,237,0.25); }
+  .badge-rollback{ background: rgba(239,68,68,0.12);  color: var(--danger);  border: 1px solid rgba(239,68,68,0.25); }
 
-/* ROLE PICKER */
-.role-picker { display: flex; gap: 6px; flex-wrap: wrap; }
-.role-btn {
-flex: 1;
-min-width: 88px;
-padding: 8px 10px;
-border-radius: 9px;
-border: 2px solid var(–border);
-background: transparent;
-color: var(–muted);
-cursor: pointer;
-font-family: ‘Space Mono’, monospace;
-font-size: 10px;
-text-align: center;
-font-weight: 700;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-transition: all 0.2s;
-}
-.role-btn.active-role  { border-color: var(–active);  color: var(–active);  background: rgba(0,255,136,0.07); }
-.role-btn.staging-role { border-color: var(–staging); color: var(–staging); background: rgba(245,158,11,0.07); }
-.role-btn.dev-role     { border-color: var(–dev);     color: var(–dev);     background: rgba(124,58,237,0.07); }
+  /* ROLE PICKER */
+  .role-picker { display: flex; gap: 6px; flex-wrap: wrap; }
+  .role-btn {
+    flex: 1;
+    min-width: 88px;
+    padding: 8px 10px;
+    border-radius: 9px;
+    border: 2px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    text-align: center;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: all 0.2s;
+  }
+  .role-btn.active-role  { border-color: var(--active);  color: var(--active);  background: rgba(0,255,136,0.07); }
+  .role-btn.staging-role { border-color: var(--staging); color: var(--staging); background: rgba(245,158,11,0.07); }
+  .role-btn.dev-role     { border-color: var(--dev);     color: var(--dev);     background: rgba(124,58,237,0.07); }
 
-/* REPOS LIST */
-.repos-list { display: grid; gap: 9px; margin-bottom: 20px; }
-.repo-card {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 13px;
-padding: 15px 18px;
-cursor: pointer;
-transition: all 0.2s;
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 12px;
-}
-.repo-card:hover { background: var(–card-hover); border-color: var(–accent2); transform: translateY(-1px); }
-.repo-info { flex: 1; min-width: 0; }
-.repo-name { font-family: ‘Space Mono’, monospace; font-size: 13px; font-weight: 700; margin-bottom: 3px; word-break: break-all; }
-.repo-meta { font-size: 11px; color: var(–muted); font-family: ‘Space Mono’, monospace; }
-.repo-actions { display: flex; gap: 6px; flex-shrink: 0; }
+  /* REPOS LIST */
+  .repos-list { display: grid; gap: 9px; margin-bottom: 20px; }
+  .repo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 13px;
+    padding: 15px 18px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .repo-card:hover { background: var(--card-hover); border-color: var(--accent2); transform: translateY(-1px); }
+  .repo-info { flex: 1; min-width: 0; }
+  .repo-name { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; margin-bottom: 3px; word-break: break-all; }
+  .repo-meta { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .repo-actions { display: flex; gap: 6px; flex-shrink: 0; }
 
-/* OVERVIEW GRID */
-.overview-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  /* OVERVIEW GRID */
+  .overview-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
 
-.ov-card {
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 14px;
-overflow: hidden;
-transition: border-color 0.2s;
-}
-.ov-card.expanded { border-color: rgba(0,255,136,0.3); }
+  .ov-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .ov-card.expanded { border-color: rgba(0,255,136,0.3); }
 
-.ov-card-header {
-padding: 16px 18px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 12px;
-cursor: pointer;
-transition: background 0.15s;
-}
-.ov-card-header:hover { background: var(–card-hover); }
+  .ov-card-header {
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .ov-card-header:hover { background: var(--card-hover); }
 
-.ov-card-info { flex: 1; min-width: 0; }
-.ov-card-title { font-family: ‘Space Mono’, monospace; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
-.ov-card-sub { font-size: 11px; color: var(–muted); font-family: ‘Space Mono’, monospace; }
+  .ov-card-info { flex: 1; min-width: 0; }
+  .ov-card-title { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+  .ov-card-sub { font-size: 11px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-.ov-card-meta { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
-.meta-pill {
-font-family: ‘Space Mono’, monospace;
-font-size: 9.5px;
-padding: 3px 9px;
-border-radius: 20px;
-background: var(–surface);
-border: 1px solid var(–border);
-color: var(–muted);
-}
-.meta-pill.active-pill { border-color: rgba(0,255,136,0.3); color: var(–active); background: rgba(0,255,136,0.06); }
+  .ov-card-meta { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+  .meta-pill {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .meta-pill.active-pill { border-color: rgba(0,255,136,0.3); color: var(--active); background: rgba(0,255,136,0.06); }
 
-.ov-toggle-icon { font-size: 18px; color: var(–muted); transition: transform 0.25s; flex-shrink: 0; }
-.ov-toggle-icon.open { transform: rotate(90deg); }
+  .ov-toggle-icon { font-size: 18px; color: var(--muted); transition: transform 0.25s; flex-shrink: 0; }
+  .ov-toggle-icon.open { transform: rotate(90deg); }
 
-.ov-card-body {
-display: none;
-border-top: 1px solid var(–border);
-background: var(–surface);
-}
-.ov-card-body.visible { display: block; animation: fadeIn 0.2s; }
+  .ov-card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .ov-card-body.visible { display: block; animation: fadeIn 0.2s; }
 
-.ov-loading { padding: 24px; text-align: center; font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–muted); }
+  .ov-loading { padding: 24px; text-align: center; font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); }
 
-/* FILE ROWS IN OVERVIEW */
-.ov-file {
-padding: 14px 18px;
-border-bottom: 1px solid var(–border);
-}
-.ov-file:last-child { border-bottom: none; }
+  /* FILE ROWS IN OVERVIEW */
+  .ov-file {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .ov-file:last-child { border-bottom: none; }
 
-.ov-file-top {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 10px;
-margin-bottom: 8px;
-flex-wrap: wrap;
-}
+  .ov-file-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
 
-.ov-file-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.ov-file-name { font-family: ‘Space Mono’, monospace; font-size: 13px; font-weight: 700; }
-.ov-file-actions { display: flex; gap: 5px; flex-shrink: 0; }
+  .ov-file-left { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .ov-file-name { font-family: 'Space Mono', monospace; font-size: 13px; font-weight: 700; }
+  .ov-file-actions { display: flex; gap: 5px; flex-shrink: 0; }
 
-.ov-links { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
+  .ov-links { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
 
-.link-row {
-display: flex;
-align-items: center;
-gap: 7px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 8px;
-padding: 7px 10px;
-flex-wrap: wrap;
-}
-.link-label { font-family: ‘Space Mono’, monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(–muted); flex-shrink: 0; }
-.link-url { font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–accent2); text-decoration: none; flex: 1; word-break: break-all; min-width: 0; }
-.link-url:hover { color: var(–accent); }
-.copy-btn {
-background: transparent;
-border: 1px solid var(–border);
-border-radius: 5px;
-color: var(–muted);
-font-family: ‘Space Mono’, monospace;
-font-size: 8.5px;
-padding: 2px 7px;
-cursor: pointer;
-transition: all 0.15s;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-font-weight: 700;
-flex-shrink: 0;
-}
-.copy-btn:hover { border-color: var(–accent); color: var(–accent); }
+  .link-row {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 10px;
+    flex-wrap: wrap;
+  }
+  .link-label { font-family: 'Space Mono', monospace; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); flex-shrink: 0; }
+  .link-url { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent2); text-decoration: none; flex: 1; word-break: break-all; min-width: 0; }
+  .link-url:hover { color: var(--accent); }
+  .copy-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 8.5px;
+    padding: 2px 7px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
 
-/* VERSIONS ACCORDION */
-.versions-acc { border: 1px solid var(–border); border-radius: 9px; overflow: hidden; }
+  /* VERSIONS ACCORDION */
+  .versions-acc { border: 1px solid var(--border); border-radius: 9px; overflow: hidden; }
 
-.versions-acc-header {
-display: flex;
-align-items: center;
-justify-content: space-between;
-padding: 8px 12px;
-background: var(–card);
-cursor: pointer;
-font-family: ‘Space Mono’, monospace;
-font-size: 10.5px;
-color: var(–muted);
-transition: color 0.15s, background 0.15s;
-gap: 8px;
-}
-.versions-acc-header:hover { color: var(–text); background: var(–card-hover); }
-.versions-acc-header span { color: var(–accent2); }
+  .versions-acc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background: var(--card);
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 10.5px;
+    color: var(--muted);
+    transition: color 0.15s, background 0.15s;
+    gap: 8px;
+  }
+  .versions-acc-header:hover { color: var(--text); background: var(--card-hover); }
+  .versions-acc-header span { color: var(--accent2); }
 
-.versions-acc-body { display: none; }
-.versions-acc-body.open { display: block; }
+  .versions-acc-body { display: none; }
+  .versions-acc-body.open { display: block; }
 
-.v-item {
-padding: 10px 14px;
-border-top: 1px solid var(–border);
-transition: background 0.15s;
-}
-.v-item:hover { background: var(–card-hover); }
+  .v-item {
+    padding: 10px 14px;
+    border-top: 1px solid var(--border);
+    transition: background 0.15s;
+  }
+  .v-item:hover { background: var(--card-hover); }
 
-.v-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
-.v-badges { display: flex; gap: 5px; align-items: center; }
-.v-num { font-family: ‘Space Mono’, monospace; font-size: 10px; font-weight: 700; color: var(–accent2); }
-.v-time { font-size: 10px; color: var(–muted); font-family: ‘Space Mono’, monospace; }
-.v-name { font-size: 13px; font-weight: 700; color: var(–text); margin-bottom: 4px; line-height: 1.4; }
-.v-changes {
-font-size: 11.5px;
-color: var(–muted);
-margin-bottom: 8px;
-line-height: 1.6;
-white-space: pre-line;
-padding: 7px 10px;
-background: var(–surface);
-border-radius: 7px;
-border-left: 2px solid var(–border);
-}
-.v-desc { font-size: 12.5px; color: var(–text); margin-bottom: 8px; line-height: 1.45; }
-.v-actions { display: flex; gap: 5px; }
+  .v-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 5px; flex-wrap: wrap; }
+  .v-badges { display: flex; gap: 5px; align-items: center; }
+  .v-num { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; color: var(--accent2); }
+  .v-time { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .v-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; line-height: 1.4; }
+  .v-changes {
+    font-size: 11.5px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    line-height: 1.6;
+    white-space: pre-line;
+    padding: 7px 10px;
+    background: var(--surface);
+    border-radius: 7px;
+    border-left: 2px solid var(--border);
+  }
+  .v-desc { font-size: 12.5px; color: var(--text); margin-bottom: 8px; line-height: 1.45; }
+  .v-actions { display: flex; gap: 5px; }
 
-/* DEPLOY TAB */
-.deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
-@media (max-width: 520px) { .deploy-grid { grid-template-columns: 1fr; } }
+  /* DEPLOY TAB */
+  .deploy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 18px; }
+  @media (max-width: 520px) { .deploy-grid { grid-template-columns: 1fr; } }
 
-.upload-zone {
-background: var(–surface);
-border: 2px dashed var(–border);
-border-radius: 14px;
-padding: 36px 24px;
-text-align: center;
-cursor: pointer;
-transition: all 0.25s;
-margin-bottom: 16px;
-position: relative;
-overflow: hidden;
-}
-.upload-zone::before {
-content: ‘’;
-position: absolute;
-inset: 0;
-background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,255,136,0.03), transparent);
-opacity: 0;
-transition: opacity 0.25s;
-}
-.upload-zone:hover::before,
-.upload-zone.drag-over::before { opacity: 1; }
-.upload-zone:hover, .upload-zone.drag-over { border-color: rgba(0,255,136,0.5); }
-.upload-zone.has-file { border-style: solid; border-color: rgba(0,255,136,0.4); }
+  .upload-zone {
+    background: var(--surface);
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+    padding: 36px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.25s;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+  .upload-zone::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,255,136,0.03), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .upload-zone:hover::before,
+  .upload-zone.drag-over::before { opacity: 1; }
+  .upload-zone:hover, .upload-zone.drag-over { border-color: rgba(0,255,136,0.5); }
+  .upload-zone.has-file { border-style: solid; border-color: rgba(0,255,136,0.4); }
 
-.upload-zone input[type=“file”] {
-position: absolute;
-inset: 0;
-opacity: 0;
-cursor: pointer;
-width: 100%;
-height: 100%;
-padding: 0;
-border: none;
-background: transparent;
-}
-.uz-icon { font-size: 40px; margin-bottom: 12px; display: block; position: relative; z-index: 1; }
-.uz-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 1; }
-.uz-sub { font-size: 12px; color: var(–muted); position: relative; z-index: 1; }
-.uz-file { font-family: ‘Space Mono’, monospace; font-size: 12px; color: var(–accent); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; display: none; }
+  .upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    background: transparent;
+  }
+  .uz-icon { font-size: 40px; margin-bottom: 12px; display: block; position: relative; z-index: 1; }
+  .uz-title { font-size: 15px; font-weight: 700; margin-bottom: 5px; position: relative; z-index: 1; }
+  .uz-sub { font-size: 12px; color: var(--muted); position: relative; z-index: 1; }
+  .uz-file { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; display: none; }
 
-/* INPUT MODE TOGGLE */
-.input-mode-toggle {
-display: flex;
-gap: 4px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 10px;
-padding: 4px;
-margin-bottom: 14px;
-}
-.imt-btn {
-flex: 1;
-padding: 9px 14px;
-background: transparent;
-border: none;
-border-radius: 7px;
-color: var(–muted);
-font-family: ‘Space Mono’, monospace;
-font-size: 11px;
-font-weight: 700;
-cursor: pointer;
-transition: all 0.2s;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-.imt-btn.active {
-background: var(–surface);
-color: var(–accent);
-box-shadow: 0 0 0 1px rgba(0,255,136,0.15);
-}
-.imt-btn:hover:not(.active) { color: var(–text); }
+  /* INPUT MODE TOGGLE */
+  .input-mode-toggle {
+    display: flex;
+    gap: 3px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 3px;
+    margin-bottom: 12px;
+  }
+  .input-mode-btn {
+    flex: 1;
+    padding: 8px 10px;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .input-mode-btn.active {
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,255,136,0.15);
+  }
 
-/* PASTE ZONE */
-.paste-zone {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 14px;
-padding: 14px;
-margin-bottom: 16px;
-transition: border-color 0.2s;
-}
-.paste-zone:focus-within { border-color: rgba(0,255,136,0.3); }
+  /* PASTE ZONE */
+  .paste-zone {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .paste-zone textarea {
+    min-height: 200px;
+    resize: vertical;
+    font-family: 'Space Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.6;
+    border-radius: 14px;
+    border: 2px dashed var(--border);
+    background: var(--surface);
+    color: var(--text);
+    padding: 16px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .paste-zone textarea:focus {
+    border-color: rgba(0,255,136,0.4);
+    border-style: solid;
+    box-shadow: 0 0 0 3px rgba(0,255,136,0.06);
+  }
+  .paste-zone textarea.has-content {
+    border-style: solid;
+    border-color: rgba(0,255,136,0.35);
+  }
+  .paste-zone textarea.has-error {
+    border-style: solid;
+    border-color: rgba(239,68,68,0.45);
+  }
+  .paste-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    padding: 0 2px;
+  }
+  .paste-meta .paste-ok { color: var(--accent); }
+  .paste-meta .paste-err { color: var(--danger); }
 
-/* DEPLOY PROGRESS */
-.deploy-progress {
-background: var(–surface);
-border: 1px solid var(–border);
-border-radius: 12px;
-padding: 16px;
-margin-top: 16px;
-display: none;
-}
-.deploy-progress.visible { display: block; animation: fadeIn 0.2s; }
-.dp-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-family: ‘Space Mono’, monospace; font-size: 12px; color: var(–accent); }
-.dp-log { font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–muted); line-height: 1.7; white-space: pre-wrap; }
-.dp-success { font-family: ‘Space Mono’, monospace; font-size: 11px; line-height: 1.7; }
-.dp-link { color: var(–accent); text-decoration: none; }
-.dp-link:hover { text-decoration: underline; }
+  /* VALIDATION PANEL */
+  .validation-panel {
+    display: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .validation-panel.visible { display: block; animation: fadeIn 0.2s; }
 
-/* PAGES STATUS MONITOR */
-.pages-monitor {
-margin-top: 14px;
-padding: 13px 14px;
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 10px;
-}
-.pages-monitor-title {
-font-family: ‘Space Mono’, monospace;
-font-size: 9.5px;
-text-transform: uppercase;
-letter-spacing: 1px;
-color: var(–muted);
-margin-bottom: 10px;
-font-weight: 700;
-}
-.pages-state { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
-.pages-state-msg  { font-size: 13px; font-weight: 600; flex: 1; }
-.pages-state-time { font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–muted); flex-shrink: 0; }
-.pages-bar-wrap { margin-top: 9px; height: 4px; background: var(–border); border-radius: 4px; overflow: hidden; }
-.pages-bar {
-height: 100%;
-background: linear-gradient(90deg, var(–accent2), var(–accent));
-border-radius: 4px;
-transition: width 1s linear;
-width: 0%;
-}
-.pages-bar.done  { background: var(–accent); width: 100% !important; transition: width 0.4s ease; }
-.pages-bar.error { background: var(–danger); }
-.pages-bar.pulsing { animation: pagesBarPulse 1.5s ease-in-out infinite; }
-@keyframes pagesBarPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
-.pages-actions { margin-top: 10px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
-.pages-live-link { font-family: ‘Space Mono’, monospace; font-size: 11px; color: var(–accent); text-decoration: none; font-weight: 700; }
-.pages-live-link:hover { text-decoration: underline; }
+  .val-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .val-header:hover { background: var(--card); }
+  .val-header.ok    { color: var(--accent); border-bottom: 1px solid rgba(0,255,136,0.15); }
+  .val-header.warn  { color: var(--accent3); border-bottom: 1px solid rgba(245,158,11,0.2); }
+  .val-header.error { color: var(--danger);  border-bottom: 1px solid rgba(239,68,68,0.2); }
+  .val-chevron { margin-left: auto; font-size: 16px; transition: transform 0.2s; color: var(--muted); }
+  .val-chevron.open { transform: rotate(90deg); }
 
-/* MISC */
-.spinner {
-width: 13px; height: 13px;
-border: 2px solid rgba(0,255,136,0.15);
-border-top-color: var(–accent);
-border-radius: 50%;
-animation: spin 0.75s linear infinite;
-display: inline-block;
-flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
+  .val-body {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .val-body.hidden { display: none !important; }
 
-.actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .val-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 9px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.55;
+  }
+  .val-item.ok    { background: rgba(0,255,136,0.05);  border: 1px solid rgba(0,255,136,0.12); }
+  .val-item.warn  { background: rgba(245,158,11,0.06); border: 1px solid rgba(245,158,11,0.18); }
+  .val-item.error { background: rgba(239,68,68,0.06);  border: 1px solid rgba(239,68,68,0.18); }
+  .val-item-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+  .val-item-text { flex: 1; }
+  .val-item-label { font-family: 'Space Mono', monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px; }
+  .val-item.ok    .val-item-label { color: var(--accent); }
+  .val-item.warn  .val-item-label { color: var(--accent3); }
+  .val-item.error .val-item-label { color: var(--danger); }
+  .val-item-desc { font-size: 11.5px; color: var(--muted); line-height: 1.5; }
 
-.ios-banner {
-background: linear-gradient(135deg, rgba(124,58,237,0.1), rgba(0,255,136,0.07));
-border: 1px solid rgba(124,58,237,0.25);
-border-radius: 12px;
-padding: 13px 16px;
-margin-bottom: 20px;
-gap: 12px;
-align-items: flex-start;
-}
+  .val-fix-btn {
+    margin-top: 6px;
+    padding: 4px 10px;
+    background: transparent;
+    border-radius: 6px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .val-item.warn .val-fix-btn  { border: 1px solid rgba(245,158,11,0.4); color: var(--accent3); }
+  .val-item.warn .val-fix-btn:hover  { background: rgba(245,158,11,0.1); }
+  .val-item.error .val-fix-btn { border: 1px solid rgba(239,68,68,0.4); color: var(--danger); }
+  .val-item.error .val-fix-btn:hover { background: rgba(239,68,68,0.08); }
 
-.empty-state { text-align: center; padding: 44px 20px; color: var(–muted); }
-.empty-state .es-icon { font-size: 40px; margin-bottom: 12px; }
-.empty-state p { font-size: 13px; line-height: 1.65; }
+  /* DEPLOY PROGRESS */
+  .deploy-progress {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 16px;
+    display: none;
+  }
+  .deploy-progress.visible { display: block; animation: fadeIn 0.2s; }
+  .dp-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); }
+  .dp-log { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); line-height: 1.7; white-space: pre-wrap; }
+  .dp-success { font-family: 'Space Mono', monospace; font-size: 11px; line-height: 1.7; }
+  .dp-link { color: var(--accent); text-decoration: none; }
+  .dp-link:hover { text-decoration: underline; }
 
-.locked-msg { text-align: center; padding: 44px 20px; color: var(–muted); }
-.locked-msg .lm-icon { font-size: 40px; margin-bottom: 12px; }
-.locked-msg p { font-size: 13px; line-height: 1.65; }
+  /* PAGES STATUS MONITOR */
+  .pages-monitor {
+    margin-top: 14px;
+    padding: 13px 14px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .pages-monitor-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 10px;
+    font-weight: 700;
+  }
+  .pages-state { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+  .pages-state-msg  { font-size: 13px; font-weight: 600; flex: 1; }
+  .pages-state-time { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--muted); flex-shrink: 0; }
+  .pages-bar-wrap { margin-top: 9px; height: 4px; background: var(--border); border-radius: 4px; overflow: hidden; }
+  .pages-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent2), var(--accent));
+    border-radius: 4px;
+    transition: width 1s linear;
+    width: 0%;
+  }
+  .pages-bar.done  { background: var(--accent); width: 100% !important; transition: width 0.4s ease; }
+  .pages-bar.error { background: var(--danger); }
+  .pages-bar.pulsing { animation: pagesBarPulse 1.5s ease-in-out infinite; }
+  @keyframes pagesBarPulse { 0%,100%{opacity:1} 50%{opacity:0.45} }
+  .pages-actions { margin-top: 10px; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+  .pages-live-link { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--accent); text-decoration: none; font-weight: 700; }
+  .pages-live-link:hover { text-decoration: underline; }
 
-.toast {
-position: fixed;
-bottom: 28px;
-left: 50%;
-transform: translateX(-50%) translateY(120px);
-background: var(–card);
-border: 1px solid var(–border);
-border-radius: 12px;
-padding: 12px 20px;
-font-size: 12px;
-font-family: ‘Space Mono’, monospace;
-opacity: 0;
-transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-z-index: 9999;
-max-width: 340px;
-text-align: center;
-pointer-events: none;
-}
-.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-.toast.success { border-color: rgba(0,255,136,0.4);  color: var(–accent);  background: rgba(0,255,136,0.07); }
-.toast.error   { border-color: rgba(239,68,68,0.4);  color: var(–danger);  background: rgba(239,68,68,0.07); }
-.toast.info    { border-color: rgba(124,58,237,0.4); color: #a78bfa;        background: rgba(124,58,237,0.07); }
+  /* MISC */
+  .spinner {
+    width: 13px; height: 13px;
+    border: 2px solid rgba(0,255,136,0.15);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(–surface); }
-::-webkit-scrollbar-thumb { background: var(–border); border-radius: 4px; }
+  .actions-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
-@media (max-width: 600px) {
-.tab { font-size: 9px; padding: 9px 5px; letter-spacing: 0; }
-header { flex-direction: column; gap: 10px; align-items: flex-start; }
-}
+  .empty-state { text-align: center; padding: 44px 20px; color: var(--muted); }
+  .empty-state .es-icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 13px; line-height: 1.65; }
+
+  .locked-msg { text-align: center; padding: 44px 20px; color: var(--muted); }
+  .locked-msg .lm-icon { font-size: 40px; margin-bottom: 12px; }
+  .locked-msg p { font-size: 13px; line-height: 1.65; }
+
+  .toast {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%) translateY(120px);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 9999;
+    max-width: 340px;
+    text-align: center;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+  .toast.success { border-color: rgba(0,255,136,0.4);  color: var(--accent);  background: rgba(0,255,136,0.07); }
+  .toast.error   { border-color: rgba(239,68,68,0.4);  color: var(--danger);  background: rgba(239,68,68,0.07); }
+  .toast.info    { border-color: rgba(124,58,237,0.4); color: #a78bfa;        background: rgba(124,58,237,0.07); }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+  @media (max-width: 600px) {
+    .tab { font-size: 9px; padding: 9px 5px; letter-spacing: 0; }
+    header { flex-direction: column; gap: 10px; align-items: flex-start; }
+  }
 </style>
-
 </head>
 <body>
 <div class="grid-bg"></div>
@@ -701,17 +793,6 @@ header { flex-direction: column; gap: 10px; align-items: flex-start; }
     </div>
   </div>
 
-  <!-- iOS Install Banner -->
-
-  <div id="iosBanner" class="ios-banner" style="display:none">
-    <div style="font-size:20px;flex-shrink:0">📱</div>
-    <div style="flex:1;font-size:12px;line-height:1.6;color:var(--muted)">
-      <strong style="color:#a78bfa;font-family:'Space Mono',monospace">ADICIONAR À TELA INICIAL (iOS):</strong><br>
-      Toque em <strong style="color:var(--text)">⎋ Compartilhar</strong> na barra do Safari → role para baixo → toque em <strong style="color:var(--text)">"Adicionar à Tela de Início"</strong> → confirme. O app abre em tela cheia sem a barra do navegador.
-    </div>
-    <button id="iosBannerClose" style="background:transparent;border:none;color:var(--muted);font-size:22px;cursor:pointer;flex-shrink:0;padding:0;line-height:1">×</button>
-  </div>
-
   <div class="tabs">
     <button class="tab active" data-tab="repos">📦 Repos</button>
     <button class="tab" data-tab="overview">📊 Overview</button>
@@ -720,73 +801,69 @@ header { flex-direction: column; gap: 10px; align-items: flex-start; }
   </div>
 
   <!-- ======== TAB: REPOS ======== -->
-
   <div class="tab-content active" id="tab-repos">
 
-```
-<div id="lockScreen">
-  <div class="form-card">
-    <h3 style="margin-bottom:7px;font-size:16px;font-weight:800">🔒 Criar senha mestra</h3>
-    <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.55">
-      Esta senha protege seu token do GitHub com criptografia AES-GCM local. Só você a conhece — não há recuperação. Use algo que você lembra.
-    </p>
-    <div class="field">
-      <label>Senha mestra (mínimo 8 caracteres)</label>
-      <input type="password" id="masterPass" placeholder="Crie uma senha forte" autocomplete="new-password" />
-    </div>
-    <div class="field">
-      <label>Confirmar senha</label>
-      <input type="password" id="masterPass2" placeholder="Digite novamente" autocomplete="new-password" />
-    </div>
-    <button class="btn btn-primary" onclick="setupMasterPassword()" style="width:100%;margin-top:4px">🔒 Criar senha e começar</button>
-  </div>
-</div>
-
-<div id="unlockScreen" style="display:none">
-  <div class="form-card">
-    <h3 style="margin-bottom:7px;font-size:16px;font-weight:800">🔓 Desbloquear sistema</h3>
-    <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px">Digite sua senha mestra para acessar</p>
-    <div class="field">
-      <input type="password" id="unlockPass" placeholder="Senha mestra" autocomplete="current-password" />
-    </div>
-    <button class="btn btn-primary" onclick="unlock()" style="width:100%;margin-top:4px">Desbloquear</button>
-    <button class="btn btn-danger" onclick="resetEverything()" style="width:100%;margin-top:8px;font-size:10px">🗑 Apagar todos os dados</button>
-  </div>
-</div>
-
-<div id="reposScreen" style="display:none">
-  <div class="section-title">Adicionar repositório</div>
-  <div class="form-card">
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <div class="field">
-        <label>Usuário / organização</label>
-        <input type="text" id="newOwner" placeholder="meuusuario" autocomplete="off" />
-      </div>
-      <div class="field">
-        <label>Nome do repositório</label>
-        <input type="text" id="newRepo" placeholder="meu-site" autocomplete="off" />
+    <div id="lockScreen">
+      <div class="form-card">
+        <h3 style="margin-bottom:7px;font-size:16px;font-weight:800">🔒 Criar senha mestra</h3>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;line-height:1.55">
+          Esta senha protege seu token do GitHub com criptografia AES-GCM local. Só você a conhece — não há recuperação. Use algo que você lembra.
+        </p>
+        <div class="field">
+          <label>Senha mestra (mínimo 8 caracteres)</label>
+          <input type="password" id="masterPass" placeholder="Crie uma senha forte" autocomplete="new-password" />
+        </div>
+        <div class="field">
+          <label>Confirmar senha</label>
+          <input type="password" id="masterPass2" placeholder="Digite novamente" autocomplete="new-password" />
+        </div>
+        <button class="btn btn-primary" onclick="setupMasterPassword()" style="width:100%;margin-top:4px">🔒 Criar senha e começar</button>
       </div>
     </div>
-    <div class="field">
-      <label>Apelido (opcional)</label>
-      <input type="text" id="newAlias" placeholder="Ex: Site Principal" autocomplete="off" />
-    </div>
-    <div class="field">
-      <label>URL do site — GitHub Pages (opcional)</label>
-      <input type="text" id="newBaseUrl" placeholder="https://meuusuario.github.io/meu-site" autocomplete="off" />
-    </div>
-    <button class="btn btn-primary" onclick="addRepo()" style="width:100%;margin-top:4px">➕ Salvar repositório</button>
-  </div>
 
-  <div class="section-title">Repositórios cadastrados</div>
-  <div class="repos-list" id="reposList"></div>
-</div>
-```
+    <div id="unlockScreen" style="display:none">
+      <div class="form-card">
+        <h3 style="margin-bottom:7px;font-size:16px;font-weight:800">🔓 Desbloquear sistema</h3>
+        <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px">Digite sua senha mestra para acessar</p>
+        <div class="field">
+          <input type="password" id="unlockPass" placeholder="Senha mestra" autocomplete="current-password" />
+        </div>
+        <button class="btn btn-primary" onclick="unlock()" style="width:100%;margin-top:4px">Desbloquear</button>
+        <button class="btn btn-danger" onclick="resetEverything()" style="width:100%;margin-top:8px;font-size:10px">🗑 Apagar todos os dados</button>
+      </div>
+    </div>
+
+    <div id="reposScreen" style="display:none">
+      <div class="section-title">Adicionar repositório</div>
+      <div class="form-card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div class="field">
+            <label>Usuário / organização</label>
+            <input type="text" id="newOwner" placeholder="meuusuario" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label>Nome do repositório</label>
+            <input type="text" id="newRepo" placeholder="meu-site" autocomplete="off" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Apelido (opcional)</label>
+          <input type="text" id="newAlias" placeholder="Ex: Site Principal" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>URL do site — GitHub Pages (opcional)</label>
+          <input type="text" id="newBaseUrl" placeholder="https://meuusuario.github.io/meu-site" autocomplete="off" />
+        </div>
+        <button class="btn btn-primary" onclick="addRepo()" style="width:100%;margin-top:4px">➕ Salvar repositório</button>
+      </div>
+
+      <div class="section-title">Repositórios cadastrados</div>
+      <div class="repos-list" id="reposList"></div>
+    </div>
 
   </div>
 
   <!-- ======== TAB: OVERVIEW ======== -->
-
   <div class="tab-content" id="tab-overview">
     <div class="locked-msg" id="ovLocked">
       <div class="lm-icon">🔒</div>
@@ -799,7 +876,6 @@ header { flex-direction: column; gap: 10px; align-items: flex-start; }
   </div>
 
   <!-- ======== TAB: DEPLOY ======== -->
-
   <div class="tab-content" id="tab-deploy">
     <div class="locked-msg" id="deployLocked">
       <div class="lm-icon">🔒</div>
@@ -823,147 +899,144 @@ header { flex-direction: column; gap: 10px; align-items: flex-start; }
         </div>
       </div>
 
-```
-  <div class="section-title">Novo HTML</div>
+      <div class="section-title">Novo arquivo</div>
 
-  <!-- MODE TOGGLE -->
-  <div class="input-mode-toggle">
-    <button class="imt-btn active" id="imtUpload" onclick="setInputMode('upload')">📄 Enviar arquivo</button>
-    <button class="imt-btn" id="imtPaste" onclick="setInputMode('paste')">📋 Colar código</button>
-  </div>
+      <!-- Mode toggle -->
+      <div class="input-mode-toggle">
+        <button class="input-mode-btn active" id="modeFileBtn" onclick="switchInputMode('file')">📁 Arquivo</button>
+        <button class="input-mode-btn" id="modePasteBtn" onclick="switchInputMode('paste')">📋 Colar código</button>
+      </div>
 
-  <!-- UPLOAD MODE -->
-  <div id="inputUploadMode">
-    <div class="upload-zone" id="uploadZone"
-         ondragover="handleDragOver(event)"
-         ondragleave="handleDragLeave(event)"
-         ondrop="handleDrop(event)">
-      <input type="file" id="fileInput" accept=".html,.htm" onchange="handleFileSelect(event)" />
-      <span class="uz-icon" id="uzIcon">📄</span>
-      <div class="uz-title" id="uzTitle">Arraste o HTML aqui ou clique para selecionar</div>
-      <div class="uz-sub" id="uzSub">Apenas arquivos .html · Conteúdo processado localmente</div>
-      <div class="uz-file" id="uzFile"></div>
-    </div>
-  </div>
-
-  <!-- PASTE MODE -->
-  <div id="inputPasteMode" style="display:none">
-    <div class="paste-zone">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
-        <label style="margin:0;font-size:10px">Cole o código HTML completo abaixo</label>
-        <div style="display:flex;gap:6px">
-          <button class="btn btn-secondary btn-small" onclick="clearPasteCode()">✕ Limpar</button>
-          <button class="btn btn-secondary btn-small" onclick="pastFromClipboard()">📋 Colar da área de transferência</button>
+      <!-- File upload zone -->
+      <div id="inputModeFile">
+        <div class="upload-zone" id="uploadZone"
+             ondragover="handleDragOver(event)"
+             ondragleave="handleDragLeave(event)"
+             ondrop="handleDrop(event)">
+          <input type="file" id="fileInput" accept=".html,.htm" onchange="handleFileSelect(event)" />
+          <span class="uz-icon" id="uzIcon">📄</span>
+          <div class="uz-title" id="uzTitle">Arraste o HTML aqui ou clique para selecionar</div>
+          <div class="uz-sub" id="uzSub">Apenas arquivos .html · Conteúdo processado localmente</div>
+          <div class="uz-file" id="uzFile"></div>
         </div>
       </div>
-      <textarea id="pasteCode"
-        placeholder="<!DOCTYPE html>&#10;<html lang=&quot;pt-BR&quot;>&#10;  ...cole aqui o HTML completo..."
-        oninput="onPasteInput()"
-        style="min-height:200px;font-family:'Space Mono',monospace;font-size:11.5px;line-height:1.6;resize:vertical"></textarea>
-      <div id="pasteInfo" style="margin-top:7px;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted);display:none"></div>
-    </div>
-  </div>
 
-  <div class="section-title">Detalhes da versão</div>
-  <div class="form-card">
-    <div class="field">
-      <label>Nome da atualização ✱</label>
-      <input type="text" id="deployVersionName" placeholder="Ex: Lançamento Dia das Mães, Promoção Junho, Versão com novos produtos..." autocomplete="off" />
-    </div>
-    <div class="field">
-      <label>O que foi alterado ✱</label>
-      <textarea id="deployDesc" placeholder="Ex:&#10;- Adicionado banner de promoção no topo&#10;- Botão do WhatsApp atualizado&#10;- 5 novos produtos na seção Maquiagens&#10;- Cor do header alterada para rosa" style="min-height:100px"></textarea>
-    </div>
-    <div style="margin-top:12px">
-      <label>Status no site</label>
-      <div class="role-picker" style="margin-top:7px" id="deployRolePicker">
-        <button class="role-btn" id="rBtnActive" onclick="setDeployRole('active')">🟢 Ativo</button>
-        <button class="role-btn" id="rBtnStaging" onclick="setDeployRole('staging')">🟡 Staging</button>
-        <button class="role-btn dev-role" id="rBtnDev" onclick="setDeployRole('dev')">🟣 Dev</button>
+      <!-- Paste code zone -->
+      <div id="inputModePaste" style="display:none">
+        <div class="paste-zone">
+          <textarea id="pasteCode" placeholder="Cole o código HTML aqui...&#10;&#10;Ex:&#10;&lt;!DOCTYPE html&gt;&#10;&lt;html lang=&quot;pt-BR&quot;&gt;&#10;  &lt;head&gt;...&lt;/head&gt;&#10;  &lt;body&gt;...&lt;/body&gt;&#10;&lt;/html&gt;" oninput="onPasteInput()" onpaste="setTimeout(onPasteInput,10)"></textarea>
+          <div class="paste-meta">
+            <span id="pasteMetaStatus"></span>
+            <span id="pasteMetaSize"></span>
+          </div>
+        </div>
+
+        <!-- Validation panel -->
+        <div class="validation-panel" id="validationPanel">
+          <div class="val-header" id="valHeader" onclick="toggleValBody()">
+            <span id="valHeaderIcon">⚠️</span>
+            <span id="valHeaderText">Verificando...</span>
+            <span class="val-chevron" id="valChevron">›</span>
+          </div>
+          <div class="val-body hidden" id="valBody"></div>
+        </div>
+      </div>
+
+      <div class="section-title">Detalhes da versão</div>
+      <div class="form-card">
+        <div class="field">
+          <label>Nome da atualização ✱</label>
+          <input type="text" id="deployVersionName" placeholder="Ex: Lançamento Dia das Mães, Promoção Junho, Versão com novos produtos..." autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>O que foi alterado ✱</label>
+          <textarea id="deployDesc" placeholder="Ex:&#10;- Adicionado banner de promoção no topo&#10;- Botão do WhatsApp atualizado&#10;- 5 novos produtos na seção Maquiagens&#10;- Cor do header alterada para rosa" style="min-height:100px"></textarea>
+        </div>
+        <div style="margin-top:12px">
+          <label>Status no site</label>
+          <div class="role-picker" style="margin-top:7px" id="deployRolePicker">
+            <button class="role-btn" id="rBtnActive" onclick="setDeployRole('active')">🟢 Ativo</button>
+            <button class="role-btn" id="rBtnStaging" onclick="setDeployRole('staging')">🟡 Staging</button>
+            <button class="role-btn dev-role" id="rBtnDev" onclick="setDeployRole('dev')">🟣 Dev</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="actions-row">
+        <button class="btn btn-primary" onclick="deployFile()" id="btnDeploy">🚀 Fazer Deploy</button>
+        <button class="btn btn-secondary" onclick="resetDeploy()">✕ Limpar</button>
+      </div>
+
+      <div class="deploy-progress" id="deployProgress">
+        <div class="dp-header">
+          <div class="spinner" id="dpSpinner"></div>
+          <span id="dpStatus">Processando...</span>
+        </div>
+        <div class="dp-log" id="dpLog"></div>
+        <div class="dp-success" id="dpSuccess" style="display:none"></div>
       </div>
     </div>
-  </div>
-
-  <div class="actions-row">
-    <button class="btn btn-primary" onclick="deployFile()" id="btnDeploy">🚀 Fazer Deploy</button>
-    <button class="btn btn-secondary" onclick="resetDeploy()">✕ Limpar</button>
-  </div>
-
-  <div class="deploy-progress" id="deployProgress">
-    <div class="dp-header">
-      <div class="spinner" id="dpSpinner"></div>
-      <span id="dpStatus">Processando...</span>
-    </div>
-    <div class="dp-log" id="dpLog"></div>
-    <div class="dp-success" id="dpSuccess" style="display:none"></div>
-  </div>
-</div>
-```
-
   </div>
 
   <!-- ======== TAB: SETTINGS ======== -->
-
   <div class="tab-content" id="tab-settings">
 
-```
-<div class="section-title">Token do GitHub</div>
-<div class="form-card">
-  <p style="font-size:12.5px;color:var(--muted);margin-bottom:15px;line-height:1.55">
-    Gere em <span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:11px">Settings → Developer settings → Personal access tokens → Fine-grained tokens</span>. Libere apenas <strong>Contents (Read &amp; write)</strong> nos repositórios que quiser gerenciar.
-  </p>
-  <div class="field">
-    <label>Token (será criptografado localmente)</label>
-    <input type="password" id="ghToken" placeholder="github_pat_... ou ghp_..." autocomplete="off" />
-  </div>
-  <div class="actions-row" style="margin-top:4px">
-    <button class="btn btn-primary" onclick="saveToken()">💾 Salvar criptografado</button>
-    <button class="btn btn-danger" onclick="deleteToken()">🗑 Remover</button>
-  </div>
-</div>
+    <div class="section-title">Token do GitHub</div>
+    <div class="form-card">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:15px;line-height:1.55">
+        Gere em <span style="color:var(--accent);font-family:'Space Mono',monospace;font-size:11px">Settings → Developer settings → Personal access tokens → Fine-grained tokens</span>. Libere apenas <strong>Contents (Read &amp; write)</strong> nos repositórios que quiser gerenciar.
+      </p>
+      <div class="field">
+        <label>Token (será criptografado localmente)</label>
+        <input type="password" id="ghToken" placeholder="github_pat_... ou ghp_..." autocomplete="off" />
+      </div>
+      <div class="actions-row" style="margin-top:4px">
+        <button class="btn btn-primary" onclick="saveToken()">💾 Salvar criptografado</button>
+        <button class="btn btn-danger" onclick="deleteToken()">🗑 Remover</button>
+      </div>
+    </div>
 
-<div class="section-title">Camadas de segurança ativas</div>
-<div class="form-card">
-  <div style="font-size:12px;line-height:2;color:var(--text)">
-    <div>✅ Token criptografado: <strong style="color:var(--accent);font-family:'Space Mono',monospace">AES-256-GCM + PBKDF2</strong> (250.000 iterações)</div>
-    <div>✅ Senha mestra: nunca sai do dispositivo</div>
-    <div>✅ Auto-bloqueio após <strong id="autoLockMins" style="color:var(--accent);font-family:'Space Mono',monospace">30</strong> min de inatividade</div>
-    <div>✅ <strong style="color:var(--accent);font-family:'Space Mono',monospace">Content Security Policy</strong> bloqueando scripts externos</div>
-    <div>✅ Conexões externas: somente <strong style="color:var(--accent);font-family:'Space Mono',monospace">api.github.com</strong> (HTTPS)</div>
-    <div>✅ <strong style="color:var(--accent);font-family:'Space Mono',monospace">no-referrer</strong> em todas as requisições</div>
-    <div>✅ Sanitização de inputs contra XSS</div>
-    <div>✅ Sem cookies · sem tracking · sem CDNs externos</div>
-    <div>✅ Histórico de versões apenas no localStorage (não vai pro repo)</div>
-  </div>
-</div>
+    <div class="section-title">Camadas de segurança ativas</div>
+    <div class="form-card">
+      <div style="font-size:12px;line-height:2;color:var(--text)">
+        <div>✅ Token criptografado: <strong style="color:var(--accent);font-family:'Space Mono',monospace">AES-256-GCM + PBKDF2</strong> (250.000 iterações)</div>
+        <div>✅ Senha mestra: nunca sai do dispositivo</div>
+        <div>✅ Auto-bloqueio após <strong id="autoLockMins" style="color:var(--accent);font-family:'Space Mono',monospace">30</strong> min de inatividade</div>
+        <div>✅ <strong style="color:var(--accent);font-family:'Space Mono',monospace">Content Security Policy</strong> bloqueando scripts externos</div>
+        <div>✅ Conexões externas: somente <strong style="color:var(--accent);font-family:'Space Mono',monospace">api.github.com</strong> (HTTPS)</div>
+        <div>✅ <strong style="color:var(--accent);font-family:'Space Mono',monospace">no-referrer</strong> em todas as requisições</div>
+        <div>✅ Sanitização de inputs contra XSS</div>
+        <div>✅ Sem cookies · sem tracking · sem CDNs externos</div>
+        <div>✅ Histórico de versões apenas no localStorage (não vai pro repo)</div>
+      </div>
+    </div>
 
-<div class="section-title">Auto-bloqueio</div>
-<div class="form-card">
-  <div class="field">
-    <label>Inativar após</label>
-    <select id="autoLockSelect">
-      <option value="5">5 minutos</option>
-      <option value="15">15 minutos</option>
-      <option value="30" selected>30 minutos</option>
-      <option value="60">1 hora</option>
-      <option value="120">2 horas</option>
-      <option value="9999">Nunca</option>
-    </select>
-  </div>
-  <div class="actions-row" style="margin-top:4px">
-    <button class="btn btn-primary" onclick="saveAutoLock()">Salvar</button>
-    <button class="btn btn-danger" onclick="lockNow()">🔒 Bloquear agora</button>
-  </div>
-</div>
+    <div class="section-title">Auto-bloqueio</div>
+    <div class="form-card">
+      <div class="field">
+        <label>Inativar após</label>
+        <select id="autoLockSelect">
+          <option value="5">5 minutos</option>
+          <option value="15">15 minutos</option>
+          <option value="30" selected>30 minutos</option>
+          <option value="60">1 hora</option>
+          <option value="120">2 horas</option>
+          <option value="9999">Nunca</option>
+        </select>
+      </div>
+      <div class="actions-row" style="margin-top:4px">
+        <button class="btn btn-primary" onclick="saveAutoLock()">Salvar</button>
+        <button class="btn btn-danger" onclick="lockNow()">🔒 Bloquear agora</button>
+      </div>
+    </div>
 
-<div class="section-title">Zona de perigo</div>
-<div class="form-card">
-  <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.55">
-    Apaga completamente: token, repositórios, histórico de versões, status dos arquivos e senha mestra. Irreversível.
-  </p>
-  <button class="btn btn-danger" onclick="resetEverything()">🗑 Apagar tudo e recomeçar</button>
-</div>
-```
+    <div class="section-title">Zona de perigo</div>
+    <div class="form-card">
+      <p style="font-size:12.5px;color:var(--muted);margin-bottom:14px;line-height:1.55">
+        Apaga completamente: token, repositórios, histórico de versões, status dos arquivos e senha mestra. Irreversível.
+      </p>
+      <button class="btn btn-danger" onclick="resetEverything()">🗑 Apagar tudo e recomeçar</button>
+    </div>
 
   </div>
 
@@ -1021,7 +1094,9 @@ const S = {
   deployRepoIdx: -1,
   deployFiles: [],
   autoLockMin: 30,
-  lockTimer: null
+  lockTimer: null,
+  _pasteActive: false,
+  _uploadedFromFile: false
 };
 
 const LS = {
@@ -1087,10 +1162,6 @@ async function setupMasterPassword() {
   const p2 = document.getElementById('masterPass2').value;
   if (p1.length < 8) return toast('Senha precisa ter mínimo 8 caracteres', 'error');
   if (p1 !== p2)     return toast('Senhas não coincidem', 'error');
-
-  const btn = document.querySelector('#lockScreen .btn-primary');
-  setBtnLoading(btn, '🔐 Criando chave de segurança...');
-
   try {
     const v = await encrypt('HDM_OK_V3', p1);
     localStorage.setItem(LS.VERIFY, JSON.stringify(v));
@@ -1100,20 +1171,12 @@ async function setupMasterPassword() {
     document.getElementById('masterPass').value = '';
     document.getElementById('masterPass2').value = '';
     toast('Senha criada. Bem-vindo!', 'success');
-  } catch(e) {
-    toast('Erro: ' + e.message, 'error');
-  } finally {
-    setBtnLoading(btn, null, '🔒 Criar senha e começar');
-  }
+  } catch(e) { toast('Erro: ' + e.message, 'error'); }
 }
 
 async function unlock() {
   const pass = document.getElementById('unlockPass').value;
   if (!pass) return toast('Digite a senha', 'error');
-
-  const btn = document.querySelector('#unlockScreen .btn-primary');
-  setBtnLoading(btn, '🔐 Verificando...');
-
   try {
     const v = JSON.parse(localStorage.getItem(LS.VERIFY));
     const r = await decrypt(v, pass);
@@ -1125,11 +1188,7 @@ async function unlock() {
     loadData();
     afterUnlock();
     toast('Desbloqueado!', 'success');
-  } catch(e) {
-    toast('Senha incorreta', 'error');
-  } finally {
-    setBtnLoading(btn, null, 'Desbloquear');
-  }
+  } catch(e) { toast('Senha incorreta', 'error'); }
 }
 
 function afterUnlock() {
@@ -1145,6 +1204,8 @@ function lockNow() {
   S.masterPass = null;
   S.token = null;
   S.uploadedFile = null;
+  S._pasteActive = false;
+  S._uploadedFromFile = false;
   S.shas = {};
   window._unlocked = false;
   setUnlockedUI(false);
@@ -1679,70 +1740,292 @@ function handleFileSelect(e) {
 }
 
 // ============================================================
-// INPUT MODE — UPLOAD vs PASTE
+// INPUT MODE TOGGLE
 // ============================================================
-let _inputMode = 'upload'; // 'upload' | 'paste'
+function switchInputMode(mode) {
+  const fileZone  = document.getElementById('inputModeFile');
+  const pasteZone = document.getElementById('inputModePaste');
+  const fileBtn   = document.getElementById('modeFileBtn');
+  const pasteBtn  = document.getElementById('modePasteBtn');
 
-function setInputMode(mode) {
-  _inputMode = mode;
-  document.getElementById('imtUpload').classList.toggle('active', mode === 'upload');
-  document.getElementById('imtPaste').classList.toggle('active', mode === 'paste');
-  document.getElementById('inputUploadMode').style.display = mode === 'upload' ? 'block' : 'none';
-  document.getElementById('inputPasteMode').style.display  = mode === 'paste'  ? 'block' : 'none';
-  // Clear uploaded file when switching away from upload
-  if (mode === 'paste') {
-    S.uploadedFile = null;
-    resetUploadZone();
+  if (mode === 'file') {
+    fileZone.style.display  = '';
+    pasteZone.style.display = 'none';
+    fileBtn.classList.add('active');
+    pasteBtn.classList.remove('active');
+    // Clear paste state but keep file state
+    S._pasteActive = false;
   } else {
-    clearPasteCode();
+    fileZone.style.display  = 'none';
+    pasteZone.style.display = '';
+    fileBtn.classList.remove('active');
+    pasteBtn.classList.add('active');
+    S._pasteActive = true;
+    // Pre-fill if file was already loaded
+    const ta = document.getElementById('pasteCode');
+    if (!ta.value && S.uploadedFile && S._uploadedFromFile) {
+      ta.value = S.uploadedFile.content;
+      onPasteInput();
+    }
   }
+}
+
+// ============================================================
+// PASTE CODE + VALIDATION
+// ============================================================
+let _valBodyOpen = false;
+
+function toggleValBody() {
+  _valBodyOpen = !_valBodyOpen;
+  const body    = document.getElementById('valBody');
+  const chevron = document.getElementById('valChevron');
+  body.classList.toggle('hidden', !_valBodyOpen);
+  chevron.classList.toggle('open', _valBodyOpen);
 }
 
 function onPasteInput() {
-  const code = document.getElementById('pasteCode').value;
-  const info = document.getElementById('pasteInfo');
-  if (!code.trim()) { info.style.display = 'none'; return; }
-  const isHtml = code.toLowerCase().includes('<html') || code.toLowerCase().includes('<!doctype');
-  const kb     = (new Blob([code]).size / 1024).toFixed(1);
-  info.style.display = 'block';
-  if (isHtml) {
-    info.style.color = 'var(--accent)';
-    info.textContent = `✓ HTML válido detectado · ${kb} KB`;
-    S.uploadedFile = { name: 'colado', content: code, size: new Blob([code]).size };
+  const ta      = document.getElementById('pasteCode');
+  const code    = ta.value;
+  const sizeMeta = document.getElementById('pasteMetaSize');
+  const statusMeta = document.getElementById('pasteMetaStatus');
+
+  if (!code.trim()) {
+    ta.classList.remove('has-content','has-error');
+    document.getElementById('validationPanel').classList.remove('visible');
+    statusMeta.textContent = '';
+    sizeMeta.textContent   = '';
+    S.uploadedFile = null;
+    return;
+  }
+
+  const kb = (new Blob([code]).size / 1024).toFixed(1);
+  sizeMeta.textContent = `${kb} KB`;
+
+  const issues = validateHTML(code);
+  const errors  = issues.filter(i => i.level === 'error');
+  const warns   = issues.filter(i => i.level === 'warn');
+  const oks     = issues.filter(i => i.level === 'ok');
+
+  // Update textarea border
+  ta.classList.toggle('has-error',   errors.length > 0);
+  ta.classList.toggle('has-content', errors.length === 0);
+
+  // Update panel header
+  const panel   = document.getElementById('validationPanel');
+  const header  = document.getElementById('valHeader');
+  const hIcon   = document.getElementById('valHeaderIcon');
+  const hText   = document.getElementById('valHeaderText');
+
+  panel.classList.add('visible');
+
+  if (errors.length > 0) {
+    header.className = 'val-header error';
+    hIcon.textContent = '❌';
+    hText.textContent = `${errors.length} problema${errors.length>1?'s':''} crítico${errors.length>1?'s':''} encontrado${errors.length>1?'s':''} — clique para ver`;
+    statusMeta.className = 'paste-err';
+    statusMeta.textContent = '⚠ Código com problemas';
+  } else if (warns.length > 0) {
+    header.className = 'val-header warn';
+    hIcon.textContent = '⚠️';
+    hText.textContent = `${warns.length} aviso${warns.length>1?'s':''} — clique para ver detalhes`;
+    statusMeta.className = 'paste-ok';
+    statusMeta.textContent = '✓ HTML válido (com avisos)';
   } else {
-    info.style.color = 'var(--staging)';
-    info.textContent = `⚠ Não parece um HTML completo — verifique se colou o código inteiro`;
+    header.className = 'val-header ok';
+    hIcon.textContent = '✅';
+    hText.textContent = 'Código validado — pronto para deploy';
+    statusMeta.className = 'paste-ok';
+    statusMeta.textContent = '✓ HTML perfeito';
+  }
+
+  // Render items
+  const body = document.getElementById('valBody');
+  body.innerHTML = [...errors, ...warns, ...oks].map(issue => `
+    <div class="val-item ${issue.level}">
+      <div class="val-item-icon">${issue.icon}</div>
+      <div class="val-item-text">
+        <div class="val-item-label">${sanitize(issue.title)}</div>
+        <div class="val-item-desc">${sanitize(issue.desc)}</div>
+        ${issue.fixLabel ? `<button class="val-fix-btn" onclick="applyFix('${issue.fixId}')">${sanitize(issue.fixLabel)}</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  // Only auto-open if there are errors/warns
+  if ((errors.length > 0 || warns.length > 0) && !_valBodyOpen) {
+    toggleValBody();
+  }
+
+  // Store as uploaded content if no blocking errors
+  if (errors.length === 0 || errors.every(e => e.allowDeploy)) {
+    S.uploadedFile = { name: 'codigo-colado.html', content: code, size: new Blob([code]).size };
+    S._pasteActive = true;
+    S._uploadedFromFile = false;
+  } else {
     S.uploadedFile = null;
   }
 }
 
-function clearPasteCode() {
-  document.getElementById('pasteCode').value = '';
-  document.getElementById('pasteInfo').style.display = 'none';
-  if (_inputMode === 'paste') S.uploadedFile = null;
-}
+function validateHTML(code) {
+  const issues = [];
+  const lower  = code.toLowerCase();
 
-async function pastFromClipboard() {
-  try {
-    const text = await navigator.clipboard.readText();
-    document.getElementById('pasteCode').value = text;
-    onPasteInput();
-  } catch(e) {
-    toast('Não foi possível acessar a área de transferência — cole manualmente', 'error', 4000);
+  // ERRORS — block or warn strongly
+  if (!lower.includes('<!doctype') && !lower.includes('<html')) {
+    issues.push({
+      level: 'error', icon: '❌',
+      title: 'Não parece um HTML válido',
+      desc:  'O código não contém <!DOCTYPE html> nem <html>. Certifique-se de colar o arquivo HTML completo.',
+      allowDeploy: false
+    });
   }
+
+  const openTags  = (code.match(/<body[\s>]/gi) || []).length;
+  const closeTags = (code.match(/<\/body>/gi) || []).length;
+  if (openTags > 1 || closeTags > 1) {
+    issues.push({
+      level: 'error', icon: '❌',
+      title: 'Múltiplas tags <body>',
+      desc:  `Foram encontrados ${openTags} abertura(s) e ${closeTags} fechamento(s) de <body>. Isso indica que pode ter sido colado HTML duplicado ou dois arquivos juntos.`,
+      allowDeploy: false
+    });
+  }
+
+  if (openTags === 1 && closeTags === 0) {
+    issues.push({
+      level: 'error', icon: '❌',
+      title: 'Tag </body> ausente',
+      desc:  'A tag de fechamento </body> não foi encontrada. O HTML pode estar incompleto — verifique se foi colado o arquivo inteiro.',
+      fixLabel: '🔧 Adicionar </body></html> no final',
+      fixId:    'addBodyClose',
+      allowDeploy: false
+    });
+  }
+
+  const openHead  = (code.match(/<head[\s>]/gi) || []).length;
+  const closeHead = (code.match(/<\/head>/gi) || []).length;
+  if (openHead === 1 && closeHead === 0) {
+    issues.push({
+      level: 'error', icon: '❌',
+      title: 'Tag </head> ausente',
+      desc:  'Não foi encontrado o fechamento </head>. O HTML pode estar truncado ou mal-formado.',
+      allowDeploy: false
+    });
+  }
+
+  // Check for incomplete paste (code ends without closing html)
+  const trimmed = code.trimEnd();
+  if (lower.includes('</body>') && !lower.includes('</html>')) {
+    issues.push({
+      level: 'warn', icon: '⚠️',
+      title: '</html> ausente',
+      desc:  'O arquivo não termina com </html>. Pode ter sido cortado no final. O deploy pode funcionar, mas é recomendado corrigir.',
+      fixLabel: '🔧 Adicionar </html> no final',
+      fixId:    'addHtmlClose',
+      allowDeploy: true
+    });
+  }
+
+  // Check for charset
+  if (!lower.includes('charset')) {
+    issues.push({
+      level: 'warn', icon: '⚠️',
+      title: 'Charset não declarado',
+      desc:  'Não há <meta charset="UTF-8">. Textos com acentos e caracteres especiais podem aparecer errados no site.',
+      fixLabel: '🔧 Adicionar charset UTF-8',
+      fixId:    'addCharset',
+      allowDeploy: true
+    });
+  }
+
+  // Check for viewport
+  if (!lower.includes('viewport')) {
+    issues.push({
+      level: 'warn', icon: '⚠️',
+      title: 'Meta viewport ausente',
+      desc:  'Sem <meta name="viewport">, o site pode aparecer com zoom incorreto em celulares.',
+      fixLabel: '🔧 Adicionar viewport',
+      fixId:    'addViewport',
+      allowDeploy: true
+    });
+  }
+
+  // External scripts from shady origins
+  const externalScripts = (code.match(/<script[^>]+src=["'][^"']*["']/gi) || []);
+  const suspiciousScripts = externalScripts.filter(s => {
+    const srcMatch = s.match(/src=["']([^"']+)["']/i);
+    if (!srcMatch) return false;
+    const src = srcMatch[1];
+    return !src.startsWith('https://') && !src.startsWith('//') && src.includes('.');
+  });
+  if (suspiciousScripts.length > 0) {
+    issues.push({
+      level: 'warn', icon: '⚠️',
+      title: 'Scripts externos sem HTTPS',
+      desc:  `${suspiciousScripts.length} script(s) carregados via HTTP (não seguro). O GitHub Pages força HTTPS, então esses scripts podem ser bloqueados pelo browser.`,
+      allowDeploy: true
+    });
+  }
+
+  // Inline event handlers warning
+  const inlineEvents = (code.match(/\bon\w+\s*=\s*["']/gi) || []).length;
+  if (inlineEvents > 20) {
+    issues.push({
+      level: 'warn', icon: '⚠️',
+      title: 'Muitos event handlers inline',
+      desc:  `Foram encontrados ${inlineEvents} atributos de evento inline (onclick, onchange...). Se houver uma Content Security Policy ativa no repo, eles podem ser bloqueados.`,
+      allowDeploy: true
+    });
+  }
+
+  // Check encoding issues
+  if (code.includes('â€') || code.includes('Ã©') || code.includes('Ã£')) {
+    issues.push({
+      level: 'error', icon: '❌',
+      title: 'Texto com encoding errado',
+      desc:  'Foram detectados caracteres com encoding incorreto (ex: "â€", "Ã©"). O texto provavelmente foi copiado com encoding UTF-8 lido como Latin-1. Copie o HTML diretamente do editor.',
+      allowDeploy: false
+    });
+  }
+
+  // OK checks
+  if (lower.includes('<!doctype html>')) {
+    issues.push({ level: 'ok', icon: '✅', title: 'DOCTYPE presente', desc: '<!DOCTYPE html> encontrado.', allowDeploy: true });
+  }
+  if (lower.includes('charset')) {
+    issues.push({ level: 'ok', icon: '✅', title: 'Charset declarado', desc: 'Encoding do texto configurado corretamente.', allowDeploy: true });
+  }
+  if (lower.includes('viewport')) {
+    issues.push({ level: 'ok', icon: '✅', title: 'Meta viewport presente', desc: 'O site deve renderizar corretamente em mobile.', allowDeploy: true });
+  }
+  if (lower.includes('</html>')) {
+    issues.push({ level: 'ok', icon: '✅', title: 'Estrutura HTML fechada', desc: 'Tag </html> encontrada no final.', allowDeploy: true });
+  }
+
+  return issues;
 }
 
-function resetUploadZone() {
-  document.getElementById('fileInput').value = '';
-  const zone = document.getElementById('uploadZone');
-  zone.classList.remove('has-file','drag-over');
-  document.getElementById('uzIcon').textContent = '📄';
-  document.getElementById('uzTitle').textContent = 'Arraste o HTML aqui ou clique para selecionar';
-  document.getElementById('uzSub').textContent = 'Apenas arquivos .html · Conteúdo processado localmente';
-  document.getElementById('uzFile').style.display = 'none';
+function applyFix(fixId) {
+  const ta   = document.getElementById('pasteCode');
+  let   code = ta.value;
+
+  if (fixId === 'addBodyClose') {
+    code = code.trimEnd() + '\n</body>\n</html>';
+  } else if (fixId === 'addHtmlClose') {
+    code = code.trimEnd() + '\n</html>';
+  } else if (fixId === 'addCharset') {
+    code = code.replace(/<head(\s[^>]*)?>/i, m => m + '\n  <meta charset="UTF-8">');
+  } else if (fixId === 'addViewport') {
+    code = code.replace(/<head(\s[^>]*)?>/i, m => m + '\n  <meta name="viewport" content="width=device-width, initial-scale=1.0">');
+  }
+
+  ta.value = code;
+  onPasteInput();
+  toast('✅ Correção aplicada!', 'success', 2000);
 }
 
 
+function processFile(file) {
   if (!file.name.match(/\.(html|htm)$/i)) {
     toast('Apenas arquivos .html são aceitos', 'error');
     return;
@@ -1755,6 +2038,8 @@ function resetUploadZone() {
       return;
     }
     S.uploadedFile = { name: file.name, content, size: file.size };
+    S._uploadedFromFile = true;
+    S._pasteActive = false;
     const zone = document.getElementById('uploadZone');
     zone.classList.add('has-file');
     document.getElementById('uzIcon').textContent = '✅';
@@ -1769,13 +2054,30 @@ function resetUploadZone() {
 function resetDeploy() {
   clearPagesPolling();
   S.uploadedFile = null;
-  _inputMode = 'upload';
-  document.getElementById('inputUploadMode').style.display = 'block';
-  document.getElementById('inputPasteMode').style.display  = 'none';
-  document.getElementById('imtUpload').classList.add('active');
-  document.getElementById('imtPaste').classList.remove('active');
-  resetUploadZone();
-  clearPasteCode();
+  S._pasteActive = false;
+  S._uploadedFromFile = false;
+  document.getElementById('fileInput').value = '';
+  const zone = document.getElementById('uploadZone');
+  zone.classList.remove('has-file','drag-over');
+  document.getElementById('uzIcon').textContent = '📄';
+  document.getElementById('uzTitle').textContent = 'Arraste o HTML aqui ou clique para selecionar';
+  document.getElementById('uzSub').textContent = 'Apenas arquivos .html · Conteúdo processado localmente';
+  document.getElementById('uzFile').style.display = 'none';
+  // Reset paste zone
+  const pasteCode = document.getElementById('pasteCode');
+  if (pasteCode) {
+    pasteCode.value = '';
+    pasteCode.classList.remove('has-content','has-error');
+  }
+  const pasteMetaStatus = document.getElementById('pasteMetaStatus');
+  const pasteMetaSize   = document.getElementById('pasteMetaSize');
+  if (pasteMetaStatus) pasteMetaStatus.textContent = '';
+  if (pasteMetaSize)   pasteMetaSize.textContent   = '';
+  const valPanel = document.getElementById('validationPanel');
+  if (valPanel) valPanel.classList.remove('visible');
+  _valBodyOpen = false;
+  // Switch back to file mode
+  switchInputMode('file');
   document.getElementById('deployVersionName').value = '';
   document.getElementById('deployDesc').value = '';
   document.getElementById('deployProgress').classList.remove('visible');
@@ -1790,7 +2092,7 @@ async function deployFile() {
   const filename    = 'index.html'; // Always deploy as index.html for GitHub Pages
 
   if (isNaN(idx) || idx < 0) return toast('Selecione um repositório', 'error');
-  if (!S.uploadedFile)        return toast(_inputMode === 'paste' ? 'Cole um HTML válido antes de fazer o deploy' : 'Carregue o novo HTML primeiro', 'error');
+  if (!S.uploadedFile)        return toast(S._pasteActive ? 'Cole um HTML válido antes de continuar' : 'Carregue o novo HTML primeiro', 'error');
   if (!versionName)           return toast('Adicione um nome para esta atualização', 'error');
   if (!desc)                  return toast('Descreva o que foi alterado nesta versão', 'error');
   if (!S.token)               return toast('Configure o token em ⚙️ Config', 'error');
@@ -1828,7 +2130,7 @@ async function deployFile() {
       time:       new Date().toISOString(),
       backup:     prevContent,
       roleAtTime: S.deployRole,
-      uploadedAs: S.uploadedFile.name === 'colado' ? '📋 Código colado' : S.uploadedFile.name
+      uploadedAs: S._uploadedFromFile ? S.uploadedFile.name : '(código colado)'  // original filename for reference
     });
     if (S.versions[key].length > 30) S.versions[key].pop();
 
@@ -1836,9 +2138,8 @@ async function deployFile() {
     persist();
 
     status.textContent = 'Enviando arquivo...';
-    const sourceLabel = S.uploadedFile.name === 'colado' ? 'código colado' : S.uploadedFile.name;
     logLine(`→ Enviando como index.html (${(S.uploadedFile.size/1024).toFixed(1)} KB)...`);
-    logLine(`  Fonte: ${sourceLabel}`);
+    logLine(`  Origem: ${S._uploadedFromFile ? 'Arquivo: ' + S.uploadedFile.name : '📋 Código colado diretamente'}`);
 
     const deployResult = await putFile(r.owner, r.repo, filename, S.uploadedFile.content, `[Deploy] ${versionName}`, sha);
     const newCommitSha = deployResult?.commit?.sha || null;
@@ -2022,18 +2323,6 @@ function toast(msg, type = 'info', duration = 3200) {
   t._tid = setTimeout(() => t.className = 'toast', duration);
 }
 
-function setBtnLoading(btn, loadingText, originalText) {
-  if (!btn) return;
-  if (loadingText) {
-    btn.disabled = true;
-    btn.dataset.original = btn.textContent;
-    btn.innerHTML = `<span class="spinner" style="width:11px;height:11px;border-width:2px;vertical-align:middle;margin-right:7px"></span>${loadingText}`;
-  } else {
-    btn.disabled = false;
-    btn.textContent = originalText || btn.dataset.original || '';
-  }
-}
-
 function copyText(text) {
   navigator.clipboard.writeText(text).then(
     ()  => toast('Copiado!', 'success', 1500),
@@ -2041,47 +2330,7 @@ function copyText(text) {
   );
 }
 
-// Capturador global de erros — mostra o erro real na tela
-window.addEventListener('error', function(e) {
-  const msg = (e.message || 'desconhecido') + (e.lineno ? ' (linha ' + e.lineno + ')' : '');
-  showErrBanner('JS: ' + msg);
-});
-window.addEventListener('unhandledrejection', function(e) {
-  const msg = e.reason?.message || e.reason || 'Promise rejeitada';
-  showErrBanner('Promise: ' + msg);
-});
-function showErrBanner(msg) {
-  let b = document.getElementById('errBanner');
-  if (!b) {
-    b = document.createElement('div');
-    b.id = 'errBanner';
-    b.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#ef4444;color:#fff;font-family:monospace;font-size:12px;padding:10px 14px;z-index:99999;word-break:break-all;';
-    document.body.appendChild(b);
-  }
-  b.textContent = '⚠ ERRO: ' + msg;
-}
-
-// iOS install banner
-try {
-  const isIos        = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isStandalone = !!window.navigator.standalone;
-  const dismissed    = !!localStorage.getItem('hdm_ios_banner');
-  const banner       = document.getElementById('iosBanner');
-  const closeBtn     = document.getElementById('iosBannerClose');
-
-  if (banner && isIos && !isStandalone && !dismissed) {
-    banner.style.display = 'flex';
-  }
-  if (closeBtn) {
-    closeBtn.addEventListener('click', () => {
-      if (banner) banner.style.display = 'none';
-      try { localStorage.setItem('hdm_ios_banner', '1'); } catch(e) {}
-    });
-  }
-} catch(e) { /* não bloquear se falhar */ }
-
-init().catch(function(e) { showErrBanner('init: ' + (e.message || e)); });
+init();
 </script>
-
 </body>
 </html>

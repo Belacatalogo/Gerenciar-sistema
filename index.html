@@ -509,6 +509,49 @@
   .uz-sub { font-size: 12px; color: var(--muted); position: relative; z-index: 1; }
   .uz-file { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--accent); margin-top: 10px; font-weight: 700; position: relative; z-index: 1; display: none; }
 
+  /* INPUT MODE TOGGLE */
+  .input-mode-toggle {
+    display: flex;
+    gap: 4px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 14px;
+  }
+  .imt-btn {
+    flex: 1;
+    padding: 9px 14px;
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .imt-btn.active {
+    background: var(--surface);
+    color: var(--accent);
+    box-shadow: 0 0 0 1px rgba(0,255,136,0.15);
+  }
+  .imt-btn:hover:not(.active) { color: var(--text); }
+
+  /* PASTE ZONE */
+  .paste-zone {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+  }
+  .paste-zone:focus-within { border-color: rgba(0,255,136,0.3); }
+
   /* DEPLOY PROGRESS */
   .deploy-progress {
     background: var(--surface);
@@ -747,16 +790,44 @@
         </div>
       </div>
 
-      <div class="section-title">Novo arquivo</div>
-      <div class="upload-zone" id="uploadZone"
-           ondragover="handleDragOver(event)"
-           ondragleave="handleDragLeave(event)"
-           ondrop="handleDrop(event)">
-        <input type="file" id="fileInput" accept=".html,.htm" onchange="handleFileSelect(event)" />
-        <span class="uz-icon" id="uzIcon">📄</span>
-        <div class="uz-title" id="uzTitle">Arraste o HTML aqui ou clique para selecionar</div>
-        <div class="uz-sub" id="uzSub">Apenas arquivos .html · Conteúdo processado localmente</div>
-        <div class="uz-file" id="uzFile"></div>
+      <div class="section-title">Novo HTML</div>
+
+      <!-- MODE TOGGLE -->
+      <div class="input-mode-toggle">
+        <button class="imt-btn active" id="imtUpload" onclick="setInputMode('upload')">📄 Enviar arquivo</button>
+        <button class="imt-btn" id="imtPaste" onclick="setInputMode('paste')">📋 Colar código</button>
+      </div>
+
+      <!-- UPLOAD MODE -->
+      <div id="inputUploadMode">
+        <div class="upload-zone" id="uploadZone"
+             ondragover="handleDragOver(event)"
+             ondragleave="handleDragLeave(event)"
+             ondrop="handleDrop(event)">
+          <input type="file" id="fileInput" accept=".html,.htm" onchange="handleFileSelect(event)" />
+          <span class="uz-icon" id="uzIcon">📄</span>
+          <div class="uz-title" id="uzTitle">Arraste o HTML aqui ou clique para selecionar</div>
+          <div class="uz-sub" id="uzSub">Apenas arquivos .html · Conteúdo processado localmente</div>
+          <div class="uz-file" id="uzFile"></div>
+        </div>
+      </div>
+
+      <!-- PASTE MODE -->
+      <div id="inputPasteMode" style="display:none">
+        <div class="paste-zone">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:8px">
+            <label style="margin:0;font-size:10px">Cole o código HTML completo abaixo</label>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-secondary btn-small" onclick="clearPasteCode()">✕ Limpar</button>
+              <button class="btn btn-secondary btn-small" onclick="pastFromClipboard()">📋 Colar da área de transferência</button>
+            </div>
+          </div>
+          <textarea id="pasteCode"
+            placeholder="<!DOCTYPE html>&#10;<html lang=&quot;pt-BR&quot;>&#10;  ...cole aqui o HTML completo..."
+            oninput="onPasteInput()"
+            style="min-height:200px;font-family:'Space Mono',monospace;font-size:11.5px;line-height:1.6;resize:vertical"></textarea>
+          <div id="pasteInfo" style="margin-top:7px;font-family:'Space Mono',monospace;font-size:10.5px;color:var(--muted);display:none"></div>
+        </div>
       </div>
 
       <div class="section-title">Detalhes da versão</div>
@@ -1552,7 +1623,71 @@ function handleFileSelect(e) {
   if (f) processFile(f);
 }
 
-function processFile(file) {
+// ============================================================
+// INPUT MODE — UPLOAD vs PASTE
+// ============================================================
+let _inputMode = 'upload'; // 'upload' | 'paste'
+
+function setInputMode(mode) {
+  _inputMode = mode;
+  document.getElementById('imtUpload').classList.toggle('active', mode === 'upload');
+  document.getElementById('imtPaste').classList.toggle('active', mode === 'paste');
+  document.getElementById('inputUploadMode').style.display = mode === 'upload' ? 'block' : 'none';
+  document.getElementById('inputPasteMode').style.display  = mode === 'paste'  ? 'block' : 'none';
+  // Clear uploaded file when switching away from upload
+  if (mode === 'paste') {
+    S.uploadedFile = null;
+    resetUploadZone();
+  } else {
+    clearPasteCode();
+  }
+}
+
+function onPasteInput() {
+  const code = document.getElementById('pasteCode').value;
+  const info = document.getElementById('pasteInfo');
+  if (!code.trim()) { info.style.display = 'none'; return; }
+  const isHtml = code.toLowerCase().includes('<html') || code.toLowerCase().includes('<!doctype');
+  const kb     = (new Blob([code]).size / 1024).toFixed(1);
+  info.style.display = 'block';
+  if (isHtml) {
+    info.style.color = 'var(--accent)';
+    info.textContent = `✓ HTML válido detectado · ${kb} KB`;
+    S.uploadedFile = { name: 'colado', content: code, size: new Blob([code]).size };
+  } else {
+    info.style.color = 'var(--staging)';
+    info.textContent = `⚠ Não parece um HTML completo — verifique se colou o código inteiro`;
+    S.uploadedFile = null;
+  }
+}
+
+function clearPasteCode() {
+  document.getElementById('pasteCode').value = '';
+  document.getElementById('pasteInfo').style.display = 'none';
+  if (_inputMode === 'paste') S.uploadedFile = null;
+}
+
+async function pastFromClipboard() {
+  try {
+    const text = await navigator.clipboard.readText();
+    document.getElementById('pasteCode').value = text;
+    onPasteInput();
+  } catch(e) {
+    toast('Não foi possível acessar a área de transferência — cole manualmente', 'error', 4000);
+  }
+}
+
+function resetUploadZone() {
+  document.getElementById('fileInput').value = '';
+  const zone = document.getElementById('uploadZone');
+  zone.classList.remove('has-file','drag-over');
+  document.getElementById('uzIcon').textContent = '📄';
+  document.getElementById('uzTitle').textContent = 'Arraste o HTML aqui ou clique para selecionar';
+  document.getElementById('uzSub').textContent = 'Apenas arquivos .html · Conteúdo processado localmente';
+  document.getElementById('uzFile').style.display = 'none';
+}
+
+
   if (!file.name.match(/\.(html|htm)$/i)) {
     toast('Apenas arquivos .html são aceitos', 'error');
     return;
@@ -1579,13 +1714,13 @@ function processFile(file) {
 function resetDeploy() {
   clearPagesPolling();
   S.uploadedFile = null;
-  document.getElementById('fileInput').value = '';
-  const zone = document.getElementById('uploadZone');
-  zone.classList.remove('has-file','drag-over');
-  document.getElementById('uzIcon').textContent = '📄';
-  document.getElementById('uzTitle').textContent = 'Arraste o HTML aqui ou clique para selecionar';
-  document.getElementById('uzSub').textContent = 'Apenas arquivos .html · Conteúdo processado localmente';
-  document.getElementById('uzFile').style.display = 'none';
+  _inputMode = 'upload';
+  document.getElementById('inputUploadMode').style.display = 'block';
+  document.getElementById('inputPasteMode').style.display  = 'none';
+  document.getElementById('imtUpload').classList.add('active');
+  document.getElementById('imtPaste').classList.remove('active');
+  resetUploadZone();
+  clearPasteCode();
   document.getElementById('deployVersionName').value = '';
   document.getElementById('deployDesc').value = '';
   document.getElementById('deployProgress').classList.remove('visible');
@@ -1600,7 +1735,7 @@ async function deployFile() {
   const filename    = 'index.html'; // Always deploy as index.html for GitHub Pages
 
   if (isNaN(idx) || idx < 0) return toast('Selecione um repositório', 'error');
-  if (!S.uploadedFile)        return toast('Carregue o novo HTML primeiro', 'error');
+  if (!S.uploadedFile)        return toast(_inputMode === 'paste' ? 'Cole um HTML válido antes de fazer o deploy' : 'Carregue o novo HTML primeiro', 'error');
   if (!versionName)           return toast('Adicione um nome para esta atualização', 'error');
   if (!desc)                  return toast('Descreva o que foi alterado nesta versão', 'error');
   if (!S.token)               return toast('Configure o token em ⚙️ Config', 'error');
@@ -1638,7 +1773,7 @@ async function deployFile() {
       time:       new Date().toISOString(),
       backup:     prevContent,
       roleAtTime: S.deployRole,
-      uploadedAs: S.uploadedFile.name  // original filename for reference
+      uploadedAs: S.uploadedFile.name === 'colado' ? '📋 Código colado' : S.uploadedFile.name
     });
     if (S.versions[key].length > 30) S.versions[key].pop();
 
@@ -1646,8 +1781,9 @@ async function deployFile() {
     persist();
 
     status.textContent = 'Enviando arquivo...';
+    const sourceLabel = S.uploadedFile.name === 'colado' ? 'código colado' : S.uploadedFile.name;
     logLine(`→ Enviando como index.html (${(S.uploadedFile.size/1024).toFixed(1)} KB)...`);
-    logLine(`  Arquivo original: ${S.uploadedFile.name}`);
+    logLine(`  Fonte: ${sourceLabel}`);
 
     const deployResult = await putFile(r.owner, r.repo, filename, S.uploadedFile.content, `[Deploy] ${versionName}`, sha);
     const newCommitSha = deployResult?.commit?.sha || null;

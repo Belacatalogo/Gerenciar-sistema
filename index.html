@@ -976,6 +976,45 @@
     box-shadow: 0 0 16px rgba(124,58,237,0.2);
   }
   .btn-save-status:hover { background: #6d28d9; box-shadow: 0 0 24px rgba(124,58,237,0.35); transform: translateY(-1px); }
+
+  /* PREVIEW MODAL */
+  .preview-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 10000;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.2s ease;
+  }
+  .preview-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+    gap: 10px;
+  }
+  .preview-bar-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+  .preview-bar-icon { font-size: 18px; flex-shrink: 0; }
+  .preview-bar-title { font-family: 'Space Mono', monospace; font-size: 11px; font-weight: 700; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .preview-bar-sub   { font-family: 'Space Mono', monospace; font-size: 10px; color: var(--muted); white-space: nowrap; }
+  .preview-iframe {
+    flex: 1;
+    width: 100%;
+    border: none;
+    background: #fff;
+  }
+  .preview-footer {
+    display: flex;
+    gap: 8px;
+    padding: 10px 16px;
+    background: var(--card);
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .preview-footer .btn { flex: 1; }
 </style>
 </head>
 <body>
@@ -1186,6 +1225,7 @@
       </div>
 
       <div class="actions-row">
+        <button class="btn btn-secondary" onclick="previewFile()" id="btnPreview" style="border-color:rgba(0,255,136,0.3);color:var(--accent)">👁 Pré-visualizar</button>
         <button class="btn btn-primary" onclick="deployFile()" id="btnDeploy">🚀 Fazer Deploy</button>
         <button class="btn btn-secondary" onclick="resetDeploy()">✕ Limpar</button>
       </div>
@@ -1267,6 +1307,24 @@
 
 <div class="toast" id="toast"></div>
 
+<!-- ======== PREVIEW MODAL ======== -->
+<div id="previewOverlay" class="preview-overlay" style="display:none">
+  <div class="preview-bar">
+    <div class="preview-bar-left">
+      <span class="preview-bar-icon">👁</span>
+      <div>
+        <div class="preview-bar-title">Pré-visualização</div>
+        <div class="preview-bar-sub" id="previewBarSub">—</div>
+      </div>
+    </div>
+  </div>
+  <iframe id="previewIframe" class="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+  <div class="preview-footer">
+    <button class="btn btn-confirm" onclick="closePreview(); deployFile()">🚀 Está bom — fazer deploy</button>
+    <button class="btn btn-secondary" onclick="closePreview()">✕ Fechar</button>
+  </div>
+</div>
+
 <!-- ======== EDIT STATUS MODAL ======== -->
 <div class="edit-status-overlay" id="editStatusOverlay" style="display:none">
   <div class="edit-status-modal">
@@ -1341,6 +1399,9 @@
         <span style="flex-shrink:0">⚠️</span>
         <span>Esta ação <strong>sobrescreve o index.html atual</strong> do repositório. A versão anterior será salva no histórico local.</span>
       </div>
+    </div>
+    <div style="padding:0 22px 14px">
+      <button class="btn btn-secondary" onclick="previewFile()" style="width:100%;border-color:rgba(0,255,136,0.3);color:var(--accent)">👁 Pré-visualizar antes de enviar</button>
     </div>
     <div class="confirm-actions">
       <button class="btn btn-secondary" onclick="closeConfirm()">✕ Cancelar</button>
@@ -2484,6 +2545,51 @@ function processFile(file) {
     toast(`${file.name} pronto para deploy`, 'success', 2000);
   };
   reader.readAsText(file, 'UTF-8');
+}
+
+// ============================================================
+// FILE PREVIEW
+// ============================================================
+function previewFile() {
+  if (!S.uploadedFile) {
+    toast(S._pasteActive ? 'Cole um HTML válido antes de pré-visualizar' : 'Carregue ou cole um HTML antes de pré-visualizar', 'error');
+    return;
+  }
+
+  // Close confirm modal if open
+  document.getElementById('confirmOverlay').style.display = 'none';
+
+  const overlay = document.getElementById('previewOverlay');
+  const iframe  = document.getElementById('previewIframe');
+  const sub     = document.getElementById('previewBarSub');
+
+  const kb = (S.uploadedFile.size / 1024).toFixed(1);
+  sub.textContent = (S._uploadedFromFile ? S.uploadedFile.name : 'código colado') + ' · ' + kb + ' KB';
+
+  // Use blob URL so the iframe renders the actual HTML with full fidelity
+  const blob = new Blob([S.uploadedFile.content], { type: 'text/html; charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+
+  // Revoke previous blob if any
+  if (iframe._blobUrl) URL.revokeObjectURL(iframe._blobUrl);
+  iframe._blobUrl = url;
+  iframe.src = url;
+
+  overlay.style.display = 'flex';
+}
+
+function closePreview() {
+  const overlay = document.getElementById('previewOverlay');
+  const iframe  = document.getElementById('previewIframe');
+  overlay.style.display = 'none';
+  // Small delay before clearing so the close animation isn't jarring
+  setTimeout(() => {
+    if (iframe._blobUrl) {
+      URL.revokeObjectURL(iframe._blobUrl);
+      iframe._blobUrl = null;
+    }
+    iframe.src = 'about:blank';
+  }, 300);
 }
 
 function resetDeploy() {

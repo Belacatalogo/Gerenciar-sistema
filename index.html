@@ -1150,6 +1150,19 @@
           </div>
           <div class="val-body hidden" id="valBody"></div>
         </div>
+
+        <!-- Force deploy option -->
+        <div id="forceDeployWrap" style="display:none;align-items:flex-start;gap:10px;background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:12px 14px;margin-bottom:4px">
+          <span style="font-size:18px;flex-shrink:0">⚠️</span>
+          <div style="flex:1">
+            <div style="font-family:'Space Mono',monospace;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.8px;color:var(--accent3);margin-bottom:4px">Forçar deploy mesmo assim?</div>
+            <div style="font-size:11.5px;color:var(--muted);line-height:1.5;margin-bottom:10px">O validador encontrou problemas, mas se você tem certeza que o HTML está correto (ex: o sistema que gerou o código usa templates com tags dentro de scripts), pode ignorar e enviar mesmo assim.</div>
+            <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-family:'Space Mono',monospace;font-size:11px;color:var(--accent3);text-transform:none;letter-spacing:0">
+              <input type="checkbox" id="forceDeployCheck" onchange="toggleForceDeploy(this.checked)" style="width:15px;height:15px;accent-color:var(--accent3);flex-shrink:0;cursor:pointer" />
+              Entendo os riscos — quero fazer o deploy mesmo assim
+            </label>
+          </div>
+        </div>
       </div>
 
       <div class="section-title">Detalhes da versão</div>
@@ -1388,7 +1401,8 @@ const S = {
   autoLockMin: 30,
   lockTimer: null,
   _pasteActive: false,
-  _uploadedFromFile: false
+  _uploadedFromFile: false,
+  _forceDeployPaste: false
 };
 
 const LS = {
@@ -2024,17 +2038,32 @@ async function ghFetch(owner, repo, path, opts = {}) {
   return res.json();
 }
 
+// Safe base64 encode/decode — handles all Unicode (ã, ç, é, emojis, etc.)
+function b64encode(str) {
+  const bytes = new TextEncoder().encode(str);
+  let binary = '';
+  bytes.forEach(b => binary += String.fromCharCode(b));
+  return btoa(binary);
+}
+
+function b64decode(b64) {
+  const binary = atob(b64.replace(/\n/g, ''));
+  const bytes  = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new TextDecoder('utf-8').decode(bytes);
+}
+
 async function getFileSHA(owner, repo, path) {
   const data = await ghFetch(owner, repo, `contents/${encodeURIComponent(path)}`);
   const key  = `${owner}/${repo}/${path}`;
   S.shas[key] = data.sha;
-  return { sha: data.sha, content: atob(data.content.replace(/\n/g,'')) };
+  return { sha: data.sha, content: b64decode(data.content) };
 }
 
 async function putFile(owner, repo, path, content, message, sha) {
   return ghFetch(owner, repo, `contents/${encodeURIComponent(path)}`, {
     method: 'PUT',
-    body: JSON.stringify({ message, content: btoa(unescape(encodeURIComponent(content))), sha })
+    body: JSON.stringify({ message, content: b64encode(content), sha })
   });
 }
 
@@ -2202,6 +2231,8 @@ function onPasteInput() {
 
   panel.classList.add('visible');
 
+  const hasBlockingErrors = errors.length > 0 && !errors.every(e => e.allowDeploy);
+
   if (errors.length > 0) {
     header.className = 'val-header error';
     hIcon.textContent = '❌';
@@ -2235,13 +2266,17 @@ function onPasteInput() {
     </div>
   `).join('');
 
+  // Show force-deploy option when there are blocking errors
+  const forceWrap = document.getElementById('forceDeployWrap');
+  if (forceWrap) forceWrap.style.display = hasBlockingErrors ? 'flex' : 'none';
+
   // Only auto-open if there are errors/warns
   if ((errors.length > 0 || warns.length > 0) && !_valBodyOpen) {
     toggleValBody();
   }
 
-  // Store as uploaded content if no blocking errors
-  if (errors.length === 0 || errors.every(e => e.allowDeploy)) {
+  // Store as uploaded content if no blocking errors (or force is on)
+  if (!hasBlockingErrors || S._forceDeployPaste) {
     S.uploadedFile = { name: 'codigo-colado.html', content: code, size: new Blob([code]).size };
     S._pasteActive = true;
     S._uploadedFromFile = false;
@@ -2254,6 +2289,14 @@ function validateHTML(code) {
   const issues = [];
   const lower  = code.toLowerCase();
 
+  // Strip script/style blocks and HTML comments before structural checks
+  // so that tags mentioned inside JS strings or comments don't trigger false positives
+  const stripped = code
+    .replace(/<!--[\s\S]*?-->/g, '')          // remove HTML comments
+    .replace(/<script[\s\S]*?<\/scr'+'ipt>/gi, '') // remove <script>...<\/script>
+    .replace(/<style[\s\S]*?<\/sty'+'le>/gi, '');  // remove <style>...</style>
+  const strippedLower = stripped.toLowerCase();
+
   // ERRORS — block or warn strongly
   if (!lower.includes('<!doctype') && !lower.includes('<html')) {
     issues.push({
@@ -2264,13 +2307,14 @@ function validateHTML(code) {
     });
   }
 
-  const openTags  = (code.match(/<body[\s>]/gi) || []).length;
-  const closeTags = (code.match(/<\/body>/gi) || []).length;
+  // Use stripped version to avoid false positives from JS strings / templates
+  const openTags  = (stripped.match(/<body[\s>]/gi) || []).length;
+  const closeTags = (stripped.match(/<\/body>/gi) || []).length;
   if (openTags > 1 || closeTags > 1) {
     issues.push({
       level: 'error', icon: '❌',
       title: 'Múltiplas tags <body>',
-      desc:  `Foram encontrados ${openTags} abertura(s) e ${closeTags} fechamento(s) de <body>. Isso indica que pode ter sido colado HTML duplicado ou dois arquivos juntos.`,
+      desc:  `Foram encontrados ${openTags} abertura(s) e ${closeTags} fechamento(s) de <body> fora de scripts. Isso indica HTML duplicado ou dois arquivos colados juntos.`,
       allowDeploy: false
     });
   }
@@ -2286,8 +2330,8 @@ function validateHTML(code) {
     });
   }
 
-  const openHead  = (code.match(/<head[\s>]/gi) || []).length;
-  const closeHead = (code.match(/<\/head>/gi) || []).length;
+  const openHead  = (stripped.match(/<head[\s>]/gi) || []).length;
+  const closeHead = (stripped.match(/<\/head>/gi) || []).length;
   if (openHead === 1 && closeHead === 0) {
     issues.push({
       level: 'error', icon: '❌',
@@ -2298,8 +2342,7 @@ function validateHTML(code) {
   }
 
   // Check for incomplete paste (code ends without closing html)
-  const trimmed = code.trimEnd();
-  if (lower.includes('</body>') && !lower.includes('</html>')) {
+  if (strippedLower.includes('</body>') && !strippedLower.includes('</html>')) {
     issues.push({
       level: 'warn', icon: '⚠️',
       title: '</html> ausente',
@@ -2351,8 +2394,8 @@ function validateHTML(code) {
     });
   }
 
-  // Inline event handlers warning
-  const inlineEvents = (code.match(/\bon\w+\s*=\s*["']/gi) || []).length;
+  // Inline event handlers warning — only count outside script/style blocks
+  const inlineEvents = (stripped.match(/\bon\w+\s*=\s*["']/gi) || []).length;
   if (inlineEvents > 20) {
     issues.push({
       level: 'warn', icon: '⚠️',
@@ -2362,12 +2405,14 @@ function validateHTML(code) {
     });
   }
 
-  // Check encoding issues
-  if (code.includes('â€') || code.includes('Ã©') || code.includes('Ã£')) {
+  // Check encoding issues — only flag if density is high enough to be real corruption
+  // (avoids false positives from HTML that legitimately contains these substrings in content)
+  const encMatches = (code.match(/â€|Ã©|Ã£|Ã§|Ã¡|Ã­|Ãµ|Ãº/g) || []).length;
+  if (encMatches >= 3) {
     issues.push({
       level: 'error', icon: '❌',
       title: 'Texto com encoding errado',
-      desc:  'Foram detectados caracteres com encoding incorreto (ex: "â€", "Ã©"). O texto provavelmente foi copiado com encoding UTF-8 lido como Latin-1. Copie o HTML diretamente do editor.',
+      desc:  `Foram detectados ${encMatches} trechos com encoding incorreto (ex: "â€", "Ã©"). O texto foi copiado com encoding UTF-8 lido como Latin-1. Abra o arquivo no editor e copie diretamente de lá.`,
       allowDeploy: false
     });
   }
@@ -2387,6 +2432,12 @@ function validateHTML(code) {
   }
 
   return issues;
+}
+
+function toggleForceDeploy(checked) {
+  S._forceDeployPaste = checked;
+  // Re-run paste validation to update uploadedFile state
+  onPasteInput();
 }
 
 function applyFix(fixId) {
@@ -2440,6 +2491,11 @@ function resetDeploy() {
   S.uploadedFile = null;
   S._pasteActive = false;
   S._uploadedFromFile = false;
+  S._forceDeployPaste = false;
+  const forceCheck = document.getElementById('forceDeployCheck');
+  if (forceCheck) forceCheck.checked = false;
+  const forceWrap = document.getElementById('forceDeployWrap');
+  if (forceWrap) forceWrap.style.display = 'none';
   document.getElementById('fileInput').value = '';
   const zone = document.getElementById('uploadZone');
   zone.classList.remove('has-file','drag-over');
